@@ -1,6 +1,6 @@
 /* htoolkit-app-row.c
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -34,6 +34,7 @@ typedef struct
     GtkWidget       *app_label;
     GtkWidget       *error_label;
     GtkWidget       *status_label;
+    GtkWidget       *install_label;
     GtkWidget       *install_button;
     GtkWidget       *close_button;
 
@@ -41,6 +42,7 @@ typedef struct
 
     guint           state;
     guint           status_progress;
+
 } HToolkitAppRowPrivate;
 
 enum {
@@ -61,23 +63,39 @@ htoolkit_app_row_app_init (HToolkitAppRow *app_row)
     gchar* app_image = NULL;
     app_image = htoolkit_app_get_image_from_file (app);
 
-    if (strlen (app_image) != 0)
+    if (app_image && strlen (app_image) != 0)
     {
         pixbuf = gdk_pixbuf_new_from_file (app_image, NULL);
     }
     else
     {
-        g_free (app_image);
         app_image = htoolkit_app_get_image_from_resource (app);
         pixbuf = gdk_pixbuf_new_from_resource (app_image, NULL);
     }
 
     g_free (app_image);
+
     gtk_image_set_from_pixbuf (GTK_IMAGE (priv->app_image), pixbuf);
 
     g_autofree gchar* app_name;
     app_name = htoolkit_app_get_name (app);
     gtk_label_set_text (GTK_LABEL (priv->app_label), app_name);
+
+    if (htoolkit_app_get_update (app))
+    {
+        gtk_label_set_text (GTK_LABEL (priv->error_label), _("Update version"));
+        gtk_widget_show (priv->error_label);
+        gtk_label_set_text (GTK_LABEL (priv->install_label), _("Update"));
+    }
+}
+
+HToolkitApp*
+htoolkit_app_row_get_app (HToolkitAppRow *app_row)
+{
+    g_return_val_if_fail (HTOOLKIT_APP_ROW (app_row), NULL);
+
+    HToolkitAppRowPrivate *priv = htoolkit_app_row_get_instance_private (app_row);
+    return priv->app;
 }
 
 static gboolean 
@@ -91,6 +109,7 @@ htoolkit_app_row_refresh_state_idle (gpointer user_data)
     if (state == STATE_NORMAL)
     {
         gtk_widget_hide (priv->status_label);
+        gtk_widget_hide (priv->error_label);
         gtk_widget_show (GTK_WIDGET (priv->install_button));
         gtk_widget_show (GTK_WIDGET (priv->close_button));
     }
@@ -106,7 +125,8 @@ htoolkit_app_row_refresh_state_idle (gpointer user_data)
       {
         gtk_label_set_text (GTK_LABEL (priv->status_label), _("Waiting"));
         gtk_widget_show (priv->status_label);
- 
+        gtk_widget_hide (priv->error_label);
+
         htoolkit_controller_add_package (priv->ctrl, priv->app);
         break;
       }
@@ -127,6 +147,17 @@ htoolkit_app_row_refresh_state_idle (gpointer user_data)
       {
         gtk_label_set_text (GTK_LABEL (priv->status_label), _("Installing"));
         gtk_widget_show (priv->status_label);
+
+        g_autofree gchar *msg;
+        msg = htoolkit_app_get_install_message (priv->app);
+
+        if (msg && strlen (msg)!= 0)
+        {
+            gtk_widget_hide (GTK_WIDGET (priv->progress));
+
+            gtk_label_set_text (GTK_LABEL (priv->error_label), msg);
+            gtk_widget_show (priv->error_label);
+        }
         break;
       }
     case STATE_INSTALLED :
@@ -142,9 +173,13 @@ htoolkit_app_row_refresh_state_idle (gpointer user_data)
         gtk_label_set_text (GTK_LABEL (priv->error_label), msg);
         gtk_widget_show (priv->error_label);
         gtk_widget_show (GTK_WIDGET (priv->close_button));
-        
+        gtk_widget_show (GTK_WIDGET (priv->install_button));
+
         gtk_widget_hide (priv->status_label);
         gtk_widget_hide (GTK_WIDGET (priv->progress));
+
+        GtkStyleContext *context = gtk_widget_get_style_context (priv->error_label);
+        gtk_style_context_add_class (context, "error_label");
         break;
       }
     default :
@@ -241,10 +276,12 @@ htoolkit_app_row_dispose (GObject *object)
 {
     HToolkitAppRow *app_row = HTOOLKIT_APP_ROW (object);
     HToolkitAppRowPrivate *priv = htoolkit_app_row_get_instance_private (app_row);
+
     if (priv->app)
     {
         g_clear_object (&priv->app);
     }
+
     G_OBJECT_CLASS (htoolkit_app_row_parent_class)->dispose (object);
 }
 
@@ -272,7 +309,6 @@ htoolkit_app_row_set_property (GObject *object, guint prop_id, const GValue *val
         break;
       }
     default:
-        //G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
     }
 }
@@ -289,7 +325,6 @@ htoolkit_app_row_get_property (GObject *object, guint prop_id, GValue *value, GP
         g_value_set_uint (value, priv->state);
         break;
     default:
-       //G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
     }
 }
@@ -318,6 +353,7 @@ htoolkit_app_row_class_init (HToolkitAppRowClass *klass)
     gtk_widget_class_bind_template_child_private (widget_class, HToolkitAppRow, app_label);
     gtk_widget_class_bind_template_child_private (widget_class, HToolkitAppRow, error_label);
     gtk_widget_class_bind_template_child_private (widget_class, HToolkitAppRow, status_label);
+    gtk_widget_class_bind_template_child_private (widget_class, HToolkitAppRow, install_label);
     gtk_widget_class_bind_template_child_private (widget_class, HToolkitAppRow, progress);
     gtk_widget_class_bind_template_child_private (widget_class, HToolkitAppRow, install_button);
     gtk_widget_class_bind_template_child_private (widget_class, HToolkitAppRow, close_button);

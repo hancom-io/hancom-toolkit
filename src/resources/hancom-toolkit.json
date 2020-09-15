@@ -1,41 +1,38 @@
 {
     "packages" :[
-	    {
-              "package" : "hoffice-hwpviewer",
-              "version" : "",
-              "name" : "한글",
-              "image-file" : "",
-              "image-resource" : "/kr/hancom/hancom-toolkit/viewer.svg",
-              "url" : "https://cdn.hancom.com/pds/hnc/VIE",
-              "referer" : "https://www.hancom.com/cs_center",
-              "file-name" : "hoffice-hwpviewer_amd64.deb",
-              "MD5" : "f46b30ff6e42681c445b5624c49a3d2e",
-              "SHA256" : "99d5eec08be5911f9c7334eecade5c14714e5d1e471de8cdaf11560ccc1e8b8e"
-	    },
-	    {
-            "package" : "hoffice",
-            "version" : "",
-			"name" : "오피스 뷰어",
-			"image-file" : "",
-            "image-resource" : "/kr/hancom/hancom-toolkit/office.svg",
-		    "url" : "http://ftp.br.debian.org/debian/pool/main/e/eog",
-			"referer" : "",
-	    	"file-name" : "eog_3.28.4-2+b1_amd64.deb",
-	    	"MD5" : "",
-	    	"SHA256" : ""
-	    },
-	    {
-            "package" : "v3-test",
-            "version" : "",
-			"name" : "V3",
-			"image-file" : "",
-            "image-resource" : "/kr/hancom/hancom-toolkit/v3.jpg",
-		    "url" : "",
-			"referer" : "",
-	    	"file-name" : "hoffice-hwpviewer_amd64.deb",
-	    	"MD5" : "f46b30ff6e42681c445b5624c49a3d2e",
-	    	"SHA256" : "99d5eec08be5911f9c7334eecade5c14714e5d1e471de8cdaf11560ccc1e8b8e"
-	    }
-	]
-
+       {
+           "package" : "hoffice-hwp",
+           "version" : "",
+           "name" : {
+             "ko" : "한글 2020 Beta",
+             "en" : "Hangul 2020 Beta"
+           },
+           "image-file" : "",
+           "image-resource" : "/kr/hancom/hancom-toolkit/hwp.svg",
+           "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
+           "referer" : "https://www.hancom.com/cs_center",
+           "file-name" : "hoffice_hwp_amd64.deb",
+           "MD5" : "b7a35c7ea80436b0fcd36144d4aa9fc8",
+           "SHA256" : "1eddaa52eb15ccef4a6164ee52880e3d490bdad2d84f26a0b0bf627ab0ffb995"
+        },
+        {
+           "package" : "hoffice-viewer",
+           "version" : "11.20.0.905",
+           "check-package" : "hoffice-hwpviewer",
+           "name" : {
+               "ko" : "한컴오피스 2020 Viewer Beta\n(한글/한셀/한쇼)",
+               "en" : "HancomOffice 2020 \nViewer Beta"
+           },
+           "install-message" : {
+               "ko" : "일부 글꼴 미설치로 호환성이 떨어질 수 있습니다",
+               "en" : "Compatibility may be reduced due to the lack of some fonts installed"
+           },
+           "image-resource" : "/kr/hancom/hancom-toolkit/office.svg",
+           "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
+           "referer" : "https://www.hancom.com/cs_center",
+           "file-name" : "hoffice_viewer_amd64.deb",
+           "MD5" : "0cf826d146711316b67ca151934c8b9b",
+           "SHA256" : "479a075981f7de7a27e90517e50c51f07dbd5c48b70571a6db5f9e70a5cd8ece"
+        }
+    ]
 }

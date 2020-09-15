@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -20,6 +20,7 @@
 #define __UTILS__H_
 
 gboolean check_package (const gchar *package);
-gboolean check_version (const gchar *package, const gchar *filename);
+gboolean check_version (const gchar *package, const gchar *version);
+gboolean check_version_from_filename (const gchar *package, const gchar *filename);
 
 #endif

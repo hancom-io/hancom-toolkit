@@ -1,6 +1,6 @@
 /* htoolkit-app.h
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -39,9 +39,13 @@ void                htoolkit_app_set_error_msg (HToolkitApp *app, const gchar* e
 void                htoolkit_app_set_download_path (HToolkitApp *app, const gchar* path);
 
 void                htoolkit_app_set_package        (HToolkitApp *app, const gchar* package);
+void                htoolkit_app_set_check_package  (HToolkitApp *app, const gchar* package);
+void                htoolkit_app_set_version   (HToolkitApp *app, const gchar* version);
 void                htoolkit_app_set_name      (HToolkitApp *app, const gchar* name);
 void                htoolkit_app_set_image_from_file     (HToolkitApp *app, const gchar* image);
 void                htoolkit_app_set_image_from_resource (HToolkitApp *app, const gchar* image);
+
+void                htoolkit_app_set_install_message (HToolkitApp *app, const gchar* msg);
 
 void                htoolkit_app_set_uri       (HToolkitApp *app, const gchar* uri);
 void                htoolkit_app_set_referer   (HToolkitApp *app, const gchar* referer);
@@ -53,6 +57,7 @@ void                htoolkit_app_set_state     (HToolkitApp *app, guint state);
 void                htoolkit_app_set_progress  (HToolkitApp *app, guint progress);
 
 void                htoolkit_app_set_installed (HToolkitApp *app, gboolean installed);
+void                htoolkit_app_set_update (HToolkitApp *app, gboolean update);
 void                htoolkit_app_set_valid (HToolkitApp *app, gboolean valid);
 
 void                htoolkit_app_set_thread (HToolkitApp *app, GThread *thread);
@@ -61,9 +66,12 @@ gchar*              htoolkit_app_get_error_msg (HToolkitApp *app);
 gchar*              htoolkit_app_get_download_path (HToolkitApp *app);
 
 gchar*              htoolkit_app_get_package       (HToolkitApp *app);
+gchar*              htoolkit_app_get_check_package (HToolkitApp *app);
+gchar*              htoolkit_app_get_version   (HToolkitApp *app);
 gchar*              htoolkit_app_get_name      (HToolkitApp *app);
 gchar*              htoolkit_app_get_image_from_file         (HToolkitApp *app);
 gchar*              htoolkit_app_get_image_from_resource     (HToolkitApp *app);
+gchar*              htoolkit_app_get_install_message         (HToolkitApp *app);
 gchar*              htoolkit_app_get_uri       (HToolkitApp *app);
 gchar*              htoolkit_app_get_referer   (HToolkitApp *app);
 gchar*              htoolkit_app_get_dest      (HToolkitApp *app);
@@ -74,6 +82,7 @@ guint               htoolkit_app_get_state (HToolkitApp *app);
 guint               htoolkit_app_get_progress (HToolkitApp *app);
 
 gboolean            htoolkit_app_get_installed (HToolkitApp *app);
+gboolean            htoolkit_app_get_update (HToolkitApp *app);
 gboolean            htoolkit_app_get_valid (HToolkitApp *app);
 
 GThread*            htoolkit_app_get_thread (HToolkitApp *app);

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -26,7 +26,6 @@ check_package (const gchar* package)
 {
     g_autofree gchar *out;
     g_autofree gchar *command;
-
     if (!package)
         return FALSE;
 
@@ -40,7 +39,7 @@ check_package (const gchar* package)
 }
 
 gboolean
-check_version (const gchar* package, const gchar* filename)
+check_version_from_filename (const gchar* package, const gchar* filename)
 {
     g_autofree gchar *out;
     g_autofree gchar *command;
@@ -84,6 +83,47 @@ out:
     if (file_version)
     {
         g_strfreev (file_version);
+    }
+
+    return res;
+}
+
+gboolean
+check_version (const gchar* package, const gchar* ver_name)
+{
+    g_autofree gchar *out;
+    g_autofree gchar *command;
+
+    gchar **version = NULL;
+
+    gboolean res = FALSE;
+
+    if (!ver_name)
+        goto out;
+
+    command = g_strdup_printf ("%s/%s/%s %s",LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_CHECK, package);
+
+    g_spawn_command_line_sync (command, &out, NULL, NULL, NULL);
+
+    if (g_str_has_prefix (out, "Version"))
+    {
+        version = g_strsplit (out, " ", -1);
+        if (!version[1])
+            goto out;
+
+        gchar *ver;
+        ver = g_strchomp (version[1]);
+
+        if (g_strcmp0 (ver, ver_name) != 0)
+        {
+            res = TRUE;
+        }
+    }
+
+out:
+    if (version)
+    {
+        g_strfreev (version);
     }
 
     return res;

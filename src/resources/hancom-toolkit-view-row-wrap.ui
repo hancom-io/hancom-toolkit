@@ -40,7 +40,7 @@
                 <property name="valign">start</property>
                 <property name="yalign">0</property>
                 <property name="xalign">0</property>
-                <property name="height_request">40</property>
+                <property name="height_request">35</property>
                 <property name="margin_top">17</property>
                 <property name="label" translatable="yes">Hancom</property>
                 <style>
@@ -58,8 +58,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="valign">start</property>
-                <property name="margin_bottom">7</property>
+                <property name="valign">center</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkProgressBar" id="progress">
@@ -68,7 +67,6 @@
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
-                    <property name="margin_top">6</property>
                     <style>
                       <class name="installer_progress"/>
                     </style>
@@ -86,8 +84,6 @@
                     <property name="halign">start</property>
                     <property name="valign">center</property>
                     <property name="ellipsize">end</property>
-                    <property name="justify">fill</property>
-                    <property name="lines">2</property>
                     <property name="label" translatable="yes">Error</property>
                     <style>
                       <class name="status_label"/>
@@ -112,14 +108,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="valign">end</property>
-                <property name="margin_bottom">6</property>
+                <property name="margin_bottom">9</property>
                 <child>
                   <object class="GtkLabel" id="status_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">end</property>
-                    <property name="margin_bottom">0</property>
+                    <property name="margin_bottom">6</property>
                     <property name="label" translatable="yes">Waiting</property>
                     <style>
                       <class name="status_label"/>
@@ -143,7 +139,7 @@
                         <property name="halign">end</property>
                         <property name="valign">end</property>
                         <child>
-                          <object class="GtkLabel" id="install_label">
+                          <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Install</property>

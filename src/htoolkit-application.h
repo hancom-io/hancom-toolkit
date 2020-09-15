@@ -1,6 +1,6 @@
 /* htoolkit-application.h
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as

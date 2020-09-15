@@ -8,10 +8,15 @@ fi
 
 args=("$@")
 
-for (( i=0; i<$#; i++ ))
+for (( i=1; i<$#; i++ ))
 do
 	CMD="$CMD${args[$i]} "
 done
 
-echo "apt install $CMD-y"
-apt install --reinstall $CMD -y
+if [ "$1" -eq 0 ]; then
+    echo "apt purge $CMD-y"
+    apt purge $CMD -y
+else
+    echo "apt install $CMD-y"
+    apt install --reinstall $CMD -y
+fi

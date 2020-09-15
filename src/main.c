@@ -1,6 +1,6 @@
 /* main.c
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -46,12 +46,7 @@ main (int   argc,
     {
         return 0;
     }
-#if 0
-    if (check_package (VIEWER_NAME))
-    {
-        return 0;
-    }
-#endif
+
     g_autoptr(GtkApplication) app = NULL;
 
     setlocale (LC_ALL, "");

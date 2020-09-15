@@ -36,9 +36,6 @@ executable('hancom-toolkit', hancom_toolkit_sources,
   link_args: '-rdynamic'
 )
 
-install_data('hancom-toolkit.json',
-             install_dir : join_paths(get_option('libdir'), 'hancom-toolkit'))
-
 install_data('htoolkit-check',
              install_dir : join_paths(get_option('libdir'), 'hancom-toolkit'))
 

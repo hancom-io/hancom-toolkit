@@ -1,6 +1,6 @@
 /* htoolkit-app-row.h
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -35,7 +35,7 @@ struct _HToolkitAppRowClass
 };
 
 GtkWidget     *htoolkit_app_row_new (HToolkitApp *app, HToolkitController *ctrl);
-
+HToolkitApp   *htoolkit_app_row_get_app (HToolkitAppRow *app);
 void           htoolkit_app_row_refresh (HToolkitAppRow *app_row);
 
 G_END_DECLS

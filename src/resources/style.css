@@ -26,6 +26,10 @@
     color: #4a4a4a;
 }
 
+.error_label {
+    color: #ff0000;
+}
+
 .button {
     border-width: 0;
     background-color: rgba(0,0,0,0.0);

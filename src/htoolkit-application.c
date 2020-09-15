@@ -1,6 +1,6 @@
 /* htoolkit-application.c
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -24,7 +24,8 @@
 #include "htoolkit-application.h"
 
 #define DEFAULT_WINDOW_WIDTH 340
-#define DEFAULT_WINDOW_HEIGHT 390
+//#define DEFAULT_WINDOW_WIDTH 355
+#define DEFAULT_WINDOW_HEIGHT -1
 
 struct _HToolkitApplicationPrivate
 {
@@ -35,10 +36,38 @@ struct _HToolkitApplicationPrivate
 G_DEFINE_TYPE_WITH_PRIVATE (HToolkitApplication, htoolkit_application, GTK_TYPE_APPLICATION)
 
 static void
+htoolkit_application_window_move (gpointer data)
+{
+    HToolkitApplicationPrivate *priv;
+    priv = htoolkit_application_get_instance_private (HTOOLKIT_APPLICATION(data));
+
+    GdkScreen *screen = gtk_window_get_screen (GTK_WINDOW (priv->window));
+
+    if(gdk_screen_is_composited(screen))
+    {
+        GdkVisual *visual = gdk_screen_get_rgba_visual (screen);
+
+        if (visual == NULL)
+            visual = gdk_screen_get_system_visual (screen);
+
+        gtk_widget_set_visual (GTK_WIDGET(priv->window), visual);
+    }
+
+    int width = gdk_screen_width() - DEFAULT_WINDOW_WIDTH - 10;
+    gtk_window_move (GTK_WINDOW (priv->window), width, 0);
+
+}
+
+static void
 htoolkit_application_shutdown_cb (GtkWindow *win, gpointer data)
 {
-    g_print ("%s\n", __func__);
     g_application_quit (G_APPLICATION (data));
+}
+
+static void
+htoolkit_application_screen_size_changed (GtkWindow *win, gpointer data)
+{
+    htoolkit_application_window_move (data);
 }
 
 static void
@@ -63,20 +92,9 @@ htoolkit_application_activate (GApplication *app)
     gtk_window_set_skip_pager_hint (GTK_WINDOW (priv->window), TRUE);
     gtk_window_set_resizable (GTK_WINDOW (priv->window), FALSE);
     gtk_widget_set_app_paintable (GTK_WIDGET (priv->window), TRUE);
-    GdkScreen *screen = gtk_window_get_screen (GTK_WINDOW (priv->window));
 
-    if(gdk_screen_is_composited(screen))
-    {
-        GdkVisual *visual = gdk_screen_get_rgba_visual (screen);
+    htoolkit_application_window_move (app);
 
-        if (visual == NULL)
-            visual = gdk_screen_get_system_visual (screen);
-
-        gtk_widget_set_visual (GTK_WIDGET(priv->window), visual);
-    }
-
-    int width = gdk_screen_width() - DEFAULT_WINDOW_WIDTH - 10;
-    gtk_window_move (GTK_WINDOW (priv->window), width, 0);
     /* Ask the window manager/compositor to present the window. */
     gtk_window_present (GTK_WINDOW(priv->window));
 
@@ -91,6 +109,8 @@ htoolkit_application_activate (GApplication *app)
                       "shutdown",
                       G_CALLBACK (htoolkit_application_shutdown_cb),
                       app);
+    g_signal_connect (gtk_window_get_screen (GTK_WINDOW (priv->window)), "size-changed",
+                      G_CALLBACK (htoolkit_application_screen_size_changed), app);
 }
 
 static void

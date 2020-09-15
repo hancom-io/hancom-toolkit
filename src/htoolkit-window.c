@@ -1,6 +1,6 @@
 /* htoolkit-window.c
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -42,38 +42,6 @@ typedef struct
 } HToolkitWindowPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (HToolkitWindow, htoolkit_window, GTK_TYPE_APPLICATION_WINDOW)
-
-#if 0
-static void
-htoolkit_window_check_package (HToolkitWindow *win, gchar* package)
-{
-    gchar* msg;
-    //gchar *package;
-    gchar* filename;
-
-    HToolkitWindowPrivate *priv = htoolkit_window_get_instance_private (win);
-
-    package = htoolkit_window_view_get_package (priv->view);
-    if (check_package (package))
-    {
-#if 0
-        filename = htoolkit_window_view_get_file_name (priv->view);
-        if (check_version (package, filename))
-        {
-            msg = g_strdup (_("Update to the hancom 2020 Viewer Beta"));
-            gtk_label_set_text (priv->update_label, msg);
-            gtk_widget_show (GTK_WIDGET (priv->update_label));
-        }
-        else
-#endif
-        {
-            msg = g_strdup (_("Hangul 2020 Viewer Beta is installed"));
-            gtk_label_set_text (priv->error_label, msg);
-            gtk_stack_set_visible_child (GTK_STACK (priv->bar_stack), priv->end_bar);
-        }
-    }
-}
-#endif
 
 static void
 htoolkit_window_shutdown_cb (HToolkitAppList *list, gpointer data)
@@ -120,6 +88,19 @@ htoolkit_window_app_load (HToolkitWindow *win)
 
     buffer_data [byte_read] = '\0';
 
+    int i;
+    gboolean is_korean = FALSE;
+    const char * const *langs_pointer;
+    langs_pointer = g_get_language_names ();
+    for (i = 0; langs_pointer[i] != NULL; i++)
+    {
+        if (g_strcmp0 (langs_pointer[i], "ko") == 0)
+        {
+            is_korean = TRUE;
+            break;
+        }
+    }
+
     gboolean shutdown = TRUE;
 
     JsonNode *json_root;
@@ -158,22 +139,82 @@ htoolkit_window_app_load (HToolkitWindow *win)
                 continue;
 
             gchar* package;
+            gchar* version;
             HToolkitApp *app;
+            gboolean is_update;
+
+            is_update = FALSE;
 
             package = g_strdup (json_node_get_string (json_node));
-            if (check_package (package))
-                continue;
 
-            shutdown = FALSE;
-
-            app = htoolkit_app_new (package);
-
-            gchar* name;
-            json_node = json_object_get_member (json_item, "name");
+            json_node = json_object_get_member (json_item, "version");
             if (json_node != NULL)
             {
-                name = g_strdup (json_node_get_string (json_node));
-                htoolkit_app_set_name (app, name);
+                version = g_strdup (json_node_get_string (json_node));
+            }
+
+            gchar* check;
+            json_node = json_object_get_member (json_item, "check-package");
+            if (json_node != NULL)
+            {
+                check = g_strdup (json_node_get_string (json_node));
+
+                if (check_package (check))
+                    is_update = TRUE;
+            }
+
+            if (!is_update && check_package (package))
+            {
+                if (!version || strlen (version) == 0)
+                    continue;
+
+                if (!check_version (package, version))
+                    continue;
+
+                is_update = TRUE;
+            }
+
+            shutdown = FALSE;
+            app = htoolkit_app_new (package);
+            if (is_update)
+            {
+                htoolkit_app_set_update (app, TRUE);
+                if (version)
+                {
+                    htoolkit_app_set_version (app, version);
+                    g_free (version);
+                }
+
+                if (check)
+                {
+                    htoolkit_app_set_check_package (app, check);
+                    g_free (check);
+                }
+            }
+            g_free (package);
+
+            if (json_object_has_member (json_item, "name"))
+            {
+                JsonObject *json_subitem;
+                json_node = json_object_get_member (json_item, "name");
+                json_subitem = json_node_get_object (json_node);
+
+                gchar* name;
+                if (is_korean)
+                {
+                    json_node = json_object_get_member (json_subitem, "ko");
+                }
+                else
+                {
+                    json_node = json_object_get_member (json_subitem, "en");
+                }
+
+                if (json_node != NULL)
+                {
+                    name = g_strdup (json_node_get_string (json_node));
+                    htoolkit_app_set_name (app, name);
+                    g_free (name);
+                }
             }
 
             gchar* image_file;
@@ -182,6 +223,7 @@ htoolkit_window_app_load (HToolkitWindow *win)
             {
                 image_file = g_strdup (json_node_get_string (json_node));
                 htoolkit_app_set_image_from_file (app, image_file);
+                g_free (image_file);
             }
 
             gchar* image_resource;
@@ -190,6 +232,7 @@ htoolkit_window_app_load (HToolkitWindow *win)
             {
                 image_resource = g_strdup (json_node_get_string (json_node));
                 htoolkit_app_set_image_from_resource (app, image_resource);
+                g_free (image_resource);
             }
 
             gchar* url;
@@ -198,6 +241,7 @@ htoolkit_window_app_load (HToolkitWindow *win)
             {
                 url = g_strdup (json_node_get_string (json_node));
                 htoolkit_app_set_uri (app, url);
+                g_free (url);
             }
 
             gchar* referer;
@@ -206,6 +250,7 @@ htoolkit_window_app_load (HToolkitWindow *win)
             {
                 referer = g_strdup (json_node_get_string (json_node));
                 htoolkit_app_set_referer (app, referer);
+                g_free (referer);
             }
 
             gchar* dest;
@@ -214,6 +259,7 @@ htoolkit_window_app_load (HToolkitWindow *win)
             {
                 dest = g_strdup (json_node_get_string (json_node));
                 htoolkit_app_set_dest (app, dest);
+                g_free (dest);
             }
 
             gchar* md5;
@@ -222,6 +268,7 @@ htoolkit_window_app_load (HToolkitWindow *win)
             {
                 md5 = g_strdup (json_node_get_string (json_node));
                 htoolkit_app_set_md5 (app, md5);
+                g_free (md5);
             }
 
             gchar* sha256;
@@ -230,6 +277,31 @@ htoolkit_window_app_load (HToolkitWindow *win)
             {
                 sha256 = g_strdup (json_node_get_string (json_node));
                 htoolkit_app_set_sha256 (app, sha256);
+                g_free (sha256);
+            }
+
+            if (json_object_has_member (json_item, "install-message"))
+            {
+                JsonObject *json_subitem;
+                json_node = json_object_get_member (json_item, "install-message");
+                json_subitem = json_node_get_object (json_node);
+
+                gchar *message;
+                if (is_korean)
+                {
+                    json_node = json_object_get_member (json_subitem, "ko");
+                }
+                else
+                {
+                    json_node = json_object_get_member (json_subitem, "en");
+                }
+
+                if (json_node != NULL)
+                {
+                    message = g_strdup (json_node_get_string (json_node));
+                    htoolkit_app_set_install_message (app, message);
+                    g_free (message);
+                }
             }
 
             htoolkit_app_list_add_app (HTOOLKIT_APP_LIST(priv->listbox), app);
@@ -244,12 +316,11 @@ out:
 
     if (error != NULL)
         g_error_free (error);
-#if 1
+
     if (shutdown)
     {
         g_timeout_add (100, (GSourceFunc)htoolkit_window_timeout_shutdown_cb, win); 
     }
-#endif
 }
 
 static void

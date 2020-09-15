@@ -15,12 +15,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "hancom-viewer-installer"
-msgstr "한글 2020 Viewer Beta 설치"
-
-msgid "Hangul 2020 Viewer Beta"
-msgstr "한글 2020 Viewer Beta"
-
 msgid "Install"
 msgstr "설치하기"
 
@@ -42,32 +36,20 @@ msgstr "설치 중.."
 msgid "Installed"
 msgstr "설치 완료"
 
+msgid "Update"
+msgstr "업데이트"
+
+msgid "Update version"
+msgstr "업데이트 버전이 있습니다"
+
 msgid "Error"
 msgstr "오류"
 
-msgid "Downloading Hangul 2020 Viewer Beta"
-msgstr "다운로드 중..."
-
-msgid "Installing Hangul 2020 Viewer Beta"
-msgstr "설치 중..."
+msgid "Installation of Application is failed"
+msgstr "설치에 실패했습니다"
 
 msgid "Network is not active"
 msgstr "네트워크가 활성화되어있지 않습니다"
-
-msgid "The installation of Hangul 2020 Viewer Beta is complete"
-msgstr "한글 2020 Viewer Beta 설치가 완료되었습니다"
-
-msgid "The Installation of Hangul 2020 Viewer Beta is failed"
-msgstr "한글 2020 Viewer Beta 설치가 실패했습니다"
-
-msgid "Hangul 2020 Viewer Beta is installed"
-msgstr "한글 2020 Viewer Beta가 설치되어 있습니다"
-
-msgid "Whether the viewer installer is activated when the OS starts"
-msgstr "OS 부팅 시 한글 2020 Viewer Beta 인스톨러 활성화 여부"
-
-msgid "Update to the Hangul 2020 Viewer Beta"
-msgstr "한글 2020 Viewer Beta 업데이트"
 
 msgid "File is not valid"
 msgstr "파일이 유효하지 않습니다"

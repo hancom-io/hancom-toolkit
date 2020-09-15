@@ -1,6 +1,6 @@
 /* htoolkit-app-list.c
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -30,6 +30,7 @@
 typedef struct
 {
     gboolean quit;
+    gboolean network_connected;
     HToolkitController *ctrl;
 } HToolkitAppListPrivate;
 
@@ -45,26 +46,42 @@ htoolkit_controller_network_changed (GNetworkMonitor *monitor,
                                      gboolean network_available,
                                      gpointer user_data)
 {
-    GList *list, *p;
+    gint i, length;
+    GList *list;
     HToolkitAppList *app_list = HTOOLKIT_APP_LIST (user_data);
+    HToolkitAppListPrivate *priv;
+    priv  = htoolkit_app_list_get_instance_private (app_list);
 
-    if (network_available)
+    if (priv->network_connected == network_available)
         return;
 
-     list = gtk_container_get_children (GTK_CONTAINER (app_list));
+    priv->network_connected = network_available;
 
-    for (p = list; p != NULL; p = list->next)
+    list = gtk_container_get_children (GTK_CONTAINER (app_list));
+    length = g_list_length (list);
+
+    for (i = 0; i < length; i++)
     {
-        gint state;
-        HToolkitApp *app = HTOOLKIT_APP (p->data);
+        HToolkitAppRow *app_row = HTOOLKIT_APP_ROW (g_list_nth_data(list, i));
+        HToolkitApp *app = htoolkit_app_row_get_app (app_row);
 
+        gint state;
         state = htoolkit_app_get_state (app);
+
+        if (network_available)
+        {
+            if (STATE_INSTALLING != state && STATE_INSTALLED != state)
+                g_object_set (G_OBJECT (app), "state", STATE_NORMAL, NULL);
+
+            continue;
+        }
+
         if (STATE_INSTALLING <= state)
             continue;
 
         gchar *error = g_strdup (_("Network is not active"));
         htoolkit_app_set_error_msg (app, error);
-        g_object_set (G_OBJECT (app), "status", STATE_ERROR, NULL);
+        g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
         g_free (error);
     }
 }
@@ -159,6 +176,7 @@ htoolkit_app_list_init (HToolkitAppList *list)
 {
     HToolkitAppListPrivate *priv = htoolkit_app_list_get_instance_private (list);
     priv->quit = FALSE;
+    priv->network_connected = FALSE;
     priv->ctrl  = htoolkit_controller_new ();
 
     GNetworkMonitor *monitor = g_network_monitor_get_default();

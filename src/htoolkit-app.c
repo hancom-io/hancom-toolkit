@@ -1,9 +1,9 @@
 /* htoolkit-app.c
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
+* it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -30,9 +30,13 @@ typedef struct
     gchar        *error;
 
     gchar        *package;
+    gchar        *check_package;
+    gchar        *version;
     gchar        *app_name;
     gchar        *app_image_resource;
     gchar        *app_image_file;
+
+    gchar        *install_message;
 
     gchar        *dw_uri;
     gchar        *dw_referer;
@@ -47,15 +51,19 @@ typedef struct
 
     gboolean      valid;
     gboolean      installed;
+    gboolean      update;
 
     GThread       *download_thread;
 } HToolkitAppPrivate;
 
 enum {
     PROP_PACKAGE = 1,
+    PROP_CHECK_PACKAGE,
+    PROP_VERSION,
     PROP_NAME,
     PROP_IMAGE_FILE,
     PROP_IMAGE_RESOURCE,
+    PROP_INSTALL_MESSAGE,
     PROP_URI,
     PROP_REFERER,
     PROP_DEST,
@@ -64,6 +72,7 @@ enum {
     PROP_STATE,
     PROP_PROGRESS,
     PROP_INSTALLED,
+    PROP_UPDATE,
     PROP_LAST
 };
 G_DEFINE_TYPE_WITH_PRIVATE (HToolkitApp, htoolkit_app, G_TYPE_OBJECT)
@@ -96,6 +105,24 @@ htoolkit_app_set_package (HToolkitApp *app, const gchar* package)
 }
 
 void
+htoolkit_app_set_check_package (HToolkitApp *app, const gchar* package)
+{
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+    g_return_if_fail (HTOOLKIT_IS_APP (app));
+
+    priv->check_package = g_strdup (package);
+}
+
+void
+htoolkit_app_set_version (HToolkitApp *app, const gchar* version)
+{
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+    g_return_if_fail (HTOOLKIT_IS_APP (app));
+
+    priv->version = g_strdup (version);
+}
+
+void
 htoolkit_app_set_name (HToolkitApp *app, const gchar* name)
 {
     HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
@@ -120,6 +147,15 @@ htoolkit_app_set_image_from_resource (HToolkitApp *app, const gchar* image)
     g_return_if_fail (HTOOLKIT_IS_APP (app));
 
     priv->app_image_resource = g_strdup (image);
+}
+
+void
+htoolkit_app_set_install_message (HToolkitApp *app, const gchar* msg)
+{
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+    g_return_if_fail (HTOOLKIT_IS_APP (app));
+
+    priv->install_message = g_strdup (msg);
 }
 
 void
@@ -171,7 +207,6 @@ void
 htoolkit_app_set_state (HToolkitApp *app, guint state)
 {
     HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
-    //g_return_if_fail (HTOOLKIT_IS_APP (app));
     priv->state = state;
 }
 
@@ -191,6 +226,15 @@ htoolkit_app_set_installed (HToolkitApp *app, gboolean installed)
     g_return_if_fail (HTOOLKIT_IS_APP (app));
 
     priv->installed = installed;
+}
+
+void
+htoolkit_app_set_update (HToolkitApp *app, gboolean update)
+{
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+    g_return_if_fail (HTOOLKIT_IS_APP (app));
+
+    priv->update = update;
 }
 
 void
@@ -239,6 +283,24 @@ htoolkit_app_get_package (HToolkitApp *app)
 }
 
 gchar*
+htoolkit_app_get_check_package (HToolkitApp *app)
+{
+    g_return_val_if_fail (HTOOLKIT_IS_APP (app), NULL);
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+
+    return g_strdup (priv->check_package);
+}
+
+gchar*
+htoolkit_app_get_version (HToolkitApp *app)
+{
+    g_return_val_if_fail (HTOOLKIT_IS_APP (app), NULL);
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+
+    return g_strdup (priv->version);
+}
+
+gchar*
 htoolkit_app_get_name (HToolkitApp *app)
 {
     g_return_val_if_fail (HTOOLKIT_IS_APP (app), NULL);
@@ -263,6 +325,15 @@ htoolkit_app_get_image_from_resource (HToolkitApp *app)
     HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
 
     return g_strdup (priv->app_image_resource);
+}
+
+gchar*
+htoolkit_app_get_install_message (HToolkitApp *app)
+{
+    g_return_val_if_fail (HTOOLKIT_IS_APP (app), NULL);
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+
+    return g_strdup (priv->install_message);
 }
 
 gchar*
@@ -338,6 +409,15 @@ htoolkit_app_get_installed (HToolkitApp *app)
 }
 
 gboolean
+htoolkit_app_get_update (HToolkitApp *app)
+{
+    g_return_val_if_fail (HTOOLKIT_IS_APP (app), FALSE);
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+
+    return priv->update;
+}
+
+gboolean
 htoolkit_app_get_valid (HToolkitApp *app)
 {
     g_return_val_if_fail (HTOOLKIT_IS_APP (app), FALSE);
@@ -366,6 +446,12 @@ htoolkit_app_get_property (GObject *object, guint prop_id, GValue *value, GParam
     case PROP_PACKAGE:
         g_value_set_string (value, priv->package);
         break;
+    case PROP_CHECK_PACKAGE:
+        g_value_set_string (value, priv->check_package);
+        break;
+    case PROP_VERSION:
+        g_value_set_string (value, priv->version);
+        break;
     case PROP_NAME:
         g_value_set_string (value, priv->app_name);
         break;
@@ -374,6 +460,9 @@ htoolkit_app_get_property (GObject *object, guint prop_id, GValue *value, GParam
         break;
     case PROP_IMAGE_RESOURCE:
         g_value_set_string (value, priv->app_image_resource);
+        break;
+    case PROP_INSTALL_MESSAGE:
+        g_value_set_string (value, priv->install_message);
         break;
     case PROP_URI:
         g_value_set_string (value, priv->dw_uri);
@@ -396,6 +485,9 @@ htoolkit_app_get_property (GObject *object, guint prop_id, GValue *value, GParam
     case PROP_INSTALLED:
         g_value_set_boolean (value, priv->installed);
         break;
+    case PROP_UPDATE:
+        g_value_set_boolean (value, priv->update);
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
@@ -413,6 +505,12 @@ htoolkit_app_set_property (GObject *object, guint prop_id, const GValue *value, 
     case PROP_PACKAGE:
         priv->package = g_strdup (g_value_get_string (value));
         break;
+    case PROP_CHECK_PACKAGE:
+        priv->check_package = g_strdup (g_value_get_string (value));
+        break;
+    case PROP_VERSION:
+        priv->version = g_strdup (g_value_get_string (value));
+        break;
     case PROP_NAME:
         priv->app_name = g_strdup (g_value_get_string (value));
         break;
@@ -421,6 +519,9 @@ htoolkit_app_set_property (GObject *object, guint prop_id, const GValue *value, 
         break;
     case PROP_IMAGE_RESOURCE:
         priv->app_image_resource = g_strdup (g_value_get_string (value));
+        break;
+    case PROP_INSTALL_MESSAGE:
+        priv->install_message = g_strdup (g_value_get_string (value));
         break;
     case PROP_URI:
         priv->dw_uri = g_strdup (g_value_get_string (value));
@@ -443,6 +544,9 @@ htoolkit_app_set_property (GObject *object, guint prop_id, const GValue *value, 
     case PROP_INSTALLED:
         priv->installed = g_value_get_boolean (value);
         break;
+    case PROP_UPDATE:
+        priv->update = g_value_get_boolean (value);
+        break;
     default:
         //G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
@@ -461,14 +565,15 @@ htoolkit_app_finalize (GObject *object)
     HToolkitApp *app = HTOOLKIT_APP (object);
     HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
 
-    g_print ("%s\n", __func__);
-
     g_free (priv->error);
 
     g_free (priv->package);
+    g_free (priv->check_package);
     g_free (priv->app_name);
     g_free (priv->app_image_file);
     g_free (priv->app_image_resource);
+
+    g_free (priv->install_message);
 
     g_free (priv->dw_uri);
     g_free (priv->dw_referer);
@@ -506,6 +611,16 @@ htoolkit_app_class_init (HToolkitAppClass *klass)
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
     g_object_class_install_property (object_class, PROP_PACKAGE, pspec);
 
+    pspec = g_param_spec_string ("check_package", NULL, NULL,
+                     NULL,
+                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+    g_object_class_install_property (object_class, PROP_CHECK_PACKAGE, pspec);
+
+    pspec = g_param_spec_string ("version", NULL, NULL,
+                     NULL,
+                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+    g_object_class_install_property (object_class, PROP_VERSION, pspec);
+
     pspec = g_param_spec_string ("app_name", NULL, NULL,
                      NULL,
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
@@ -520,6 +635,11 @@ htoolkit_app_class_init (HToolkitAppClass *klass)
                      NULL,
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
     g_object_class_install_property (object_class, PROP_IMAGE_RESOURCE, pspec);
+
+    pspec = g_param_spec_string ("install_message", NULL, NULL,
+                     NULL,
+                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+    g_object_class_install_property (object_class, PROP_INSTALL_MESSAGE, pspec);
 
     pspec = g_param_spec_string ("dw_uri", NULL, NULL,
                      NULL,
@@ -562,6 +682,12 @@ htoolkit_app_class_init (HToolkitAppClass *klass)
                      FALSE,
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
     g_object_class_install_property (object_class, PROP_INSTALLED, pspec);
+
+    pspec = g_param_spec_boolean ("update", NULL, NULL,
+                     FALSE,
+                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+    g_object_class_install_property (object_class, PROP_UPDATE, pspec);
+
 }
 
 static void
@@ -572,21 +698,25 @@ htoolkit_app_init (HToolkitApp *app)
     priv->error = NULL;
 
     priv->package = NULL;
+    priv->check_package = NULL;
+    priv->version = NULL;
     priv->app_name = NULL;
     priv->app_image_file = NULL;
     priv->app_image_resource = NULL;
+    priv->install_message = NULL;
     priv->dw_uri = NULL;
     priv->dw_referer = NULL;
     priv->dw_dest = NULL;
     priv->dw_md5 = NULL;
     priv->dw_sha256 = NULL;
-    
+
     priv->out_path = NULL;
 
     priv->state = STATE_NORMAL;
     priv->progress = 0;
 
     priv->installed = FALSE;
+    priv->update = FALSE;
     priv->valid = FALSE;
 
     priv->download_thread = NULL;

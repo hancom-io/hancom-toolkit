@@ -1,6 +1,6 @@
 /* htoolkit-controller.c
  *
- * Copyright (C) 2020 Hancom Gooroom <gooroom@hancom.com>
+ * Copyright (C) 2020 Hancom Inc. <gooroom@hancom.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -18,6 +18,7 @@
 
 #include <gio/gio.h>
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 #include <curl/curl.h>
 #include <json-glib/json-glib.h>
 
@@ -61,8 +62,8 @@ htoolkit_controller_add_package (HToolkitController *control, HToolkitApp *app)
             g_source_remove (priv->download_work_id);
             priv->download_work_id = 0;
         }
- 
-        priv->download_work_id = g_timeout_add (500, 
+
+        priv->download_work_id = g_timeout_add (500,
                                                (GSourceFunc)htoolkit_controller_download_job,
                                                control);
     }
@@ -73,9 +74,55 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
 {
     gchar **args;
     GError *error = NULL;
+    gboolean update;
+    g_autofree gchar *package;
+
+    package = htoolkit_app_get_package (app);
+
+    update = htoolkit_app_get_update (app);
+    if (update)
+    {
+        g_autofree gchar *tmp;
+        g_autofree gchar *packages;
+        g_autofree gchar *check;
+        g_autofree gchar *delete_command;
+        g_autoptr(GString) str = g_string_new (NULL);
+
+        tmp = NULL;
+        check = htoolkit_app_get_check_package (app);
+        if (check)
+        {
+            if (check_package(check))
+            {
+                tmp = g_strdup (check);
+            }
+        }
+
+        if (check_package (package))
+        {
+            packages = g_strdup_printf ("%s %s", package, tmp);
+        }
+        else
+        {
+            packages = g_strdup (tmp);
+        }
+
+        delete_command = g_strdup_printf ("pkexec %s/%s/%s 0 %s", LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_SCRIPT, packages);
+
+        args = g_strsplit (delete_command, " ", -1);
+
+        if (!g_spawn_sync (NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL, NULL, &error))
+        {
+            htoolkit_app_set_error_msg (app, error->message);
+            g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
+
+            g_error_free (error);
+        }
+        error = NULL;
+    }
 
     g_autofree gchar *command;
-    command = g_strdup_printf ("pkexec %s/%s/%s %s", LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_SCRIPT, file);
+    command = g_strdup_printf ("pkexec %s/%s/%s 1 %s", LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_SCRIPT, file);
 
     args = g_strsplit (command, " ", -1);
 
@@ -83,26 +130,22 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
     {
         htoolkit_app_set_error_msg (app, error->message);
         g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
+
         g_error_free (error);
     }
     else
     {
-
-        //check program
-        g_autofree gchar *package;
-        package = htoolkit_app_get_package (app);
-
         if (check_package (package))
-        { 
+        {
             g_object_set (G_OBJECT (app), "state", STATE_INSTALLED, NULL);
         }
         else
         {
             g_autofree gchar *msg;
             if (error)
-                msg = error->message;
+                msg = g_strdup (error->message);
             else
-                msg = g_strdup ("Installation of Application is failed");
+                msg = g_strdup (_("Installation of Application is failed"));
 
             htoolkit_app_set_error_msg (app, msg);
             g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
@@ -119,7 +162,7 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
     g_strfreev (args);
 }
 
-static void 
+static void
 htoolkit_controller_install_work (gpointer user_data)
 {
     HToolkitApp *app;
@@ -127,12 +170,7 @@ htoolkit_controller_install_work (gpointer user_data)
 
     gchar *out_file;
     g_object_set (G_OBJECT (app), "state", STATE_INSTALLING, NULL);
-#if 0
-    gchar *dest;
-    dest = htoolkit_app_get_dest (app);
-    out_file = g_strdup_printf ("%s/%s", OUT_PATH, dest);
-    g_free (dest);
-#endif
+
     out_file = htoolkit_app_get_download_path (app);
 
     if (!g_file_test (out_file, G_FILE_TEST_EXISTS))
@@ -161,20 +199,27 @@ htoolkit_controller_download_progress (void *user_data,
 {
     g_return_val_if_fail (HTOOLKIT_APP (user_data), 0);
 
+    HToolkitApp *app = HTOOLKIT_APP (user_data);
+
+    gint state;
+    state = htoolkit_app_get_state (app);
+
+    if (state == STATE_ERROR)
+        return 1;
+
     guint p;
     guint app_progress;
 
-    HToolkitApp *app = HTOOLKIT_APP (user_data);
-    app_progress = htoolkit_app_get_progress (app);
-
     p = ((double)dlnow / (double)dltotal ) * 100;
+    app_progress = htoolkit_app_get_progress (app);
 
     if (app_progress != p)
     {
         app_progress = p;
         g_object_set (G_OBJECT (app), "progress", app_progress, NULL);
     }
-    return 0;
+
+   return 0;
 }
 
 static size_t
@@ -184,7 +229,7 @@ htoolkit_controller_download_check_cb (char* buffer, size_t size, size_t nmemb, 
     g_autofree gchar *app_sha256;
     app_sha256 = htoolkit_app_get_sha256 (app);
 
-    if (0 == strlen (app_sha256))
+    if (!app_sha256 || 0 == strlen (app_sha256))
     {
         htoolkit_app_set_valid (app, TRUE);
         return nmemb * size;
@@ -251,7 +296,7 @@ htoolkit_controller_download_check (HToolkitApp  *app, gchar* uri)
 
     return result;
 }
-#if 1
+
 static gpointer
 htoolkit_controller_download_func (HToolkitApp *app)
 {
@@ -302,9 +347,19 @@ htoolkit_controller_download_func (HToolkitApp *app)
 
     if (res != CURLE_OK)
     {
-        g_autofree gchar *error;
-        error = g_strdup (_("Error, Download"));
-        htoolkit_app_set_error_msg (app, error);
+        g_autofree gchar *dir;
+        dir = g_path_get_dirname (out_file);
+        unlink (out_file);
+        g_rmdir (dir);
+
+        gint state;
+        state = htoolkit_app_get_state (app);
+        if (state == STATE_ERROR)
+            return NULL;
+
+        g_autofree gchar *msg;
+        msg = g_strdup (_("Error, Download"));
+        htoolkit_app_set_error_msg (app, msg);
         g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
     }
     else
@@ -317,7 +372,7 @@ htoolkit_controller_download_func (HToolkitApp *app)
 
     return NULL;
 }
-#endif
+
 static void
 htoolkit_controller_download (HToolkitApp *app)
 {
@@ -328,9 +383,9 @@ htoolkit_controller_download (HToolkitApp *app)
 
     if (!is_connected)
     {
-        g_autofree gchar* error;
-        error = g_strdup (_("Network is not active"));
-        htoolkit_app_set_error_msg (app, error);
+        g_autofree gchar* msg;
+        msg = g_strdup (_("Network is not active"));
+        htoolkit_app_set_error_msg (app, msg);
         g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
         return;
     }
@@ -340,39 +395,37 @@ htoolkit_controller_download (HToolkitApp *app)
     g_autofree gchar *uri;
     g_autofree gchar *uri_full;
     g_autofree gchar *package;
-    
+
     uri = htoolkit_app_get_uri (app); 
     dest = htoolkit_app_get_dest (app);
     package = htoolkit_app_get_package (app);
 
-    //TODO 중복 파일 명 체크... 패키지별 폴더 생성 고려
     g_autofree gchar *dir;
-    dir = g_strdup_printf ("%s/%s/", OUT_PATH, package);
+    dir = g_build_filename (OUT_PATH, package, NULL);
     g_mkdir_with_parents (dir, 0700);
-    g_print ("%s\n", dir);
-    out_file = g_strdup_printf ("%s/%s", dir, dest);
-    g_print ("%s\n", out_file);
+    out_file = g_build_filename (dir, dest, NULL);
     htoolkit_app_set_download_path (app, out_file);
     g_debug ("Downloaod Dest File  : %s\n", out_file);
 
     if (g_file_test (out_file, G_FILE_TEST_EXISTS))
     {
         unlink (out_file);
-        g_rmdir (dir);
     }
- 
-    uri_full = g_strdup_printf ("%s/%s", uri, dest);
+
+    uri_full = g_build_filename (uri, dest, NULL);
     if (!htoolkit_controller_download_check (app, uri_full))
     {
         g_autofree gchar* error;
         error = g_strdup (_("File is not valid"));
         htoolkit_app_set_error_msg (app, error);
         g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
+        unlink (out_file);
+        g_rmdir (dir);
         return;
     }
- 
+
     g_object_set (G_OBJECT (app), "state", STATE_DOWNLOADING, NULL);
- 
+
     GThread *thread;
     thread = g_thread_new ("hancom-toolkit-download", (GThreadFunc)htoolkit_controller_download_func, app);
     htoolkit_app_set_thread (app, thread);
@@ -390,7 +443,6 @@ htoolkit_controller_download_job (gpointer user_data)
 
     while ((app = g_queue_pop_head (priv->download_packages)) != NULL)
     {
-        //download
         htoolkit_controller_download (app);
     }
 
