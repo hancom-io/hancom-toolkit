@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Hancom Toolkit 
+Exec=hancom-toolkit
+Icon=hancom-toolkit
+Terminal=false
+Type=Application
+Categories=GTK;
+NoDisplay=true;
+StartupNotify=true

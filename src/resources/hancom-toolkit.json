@@ -1,0 +1,41 @@
+{
+    "packages" :[
+	    {
+              "package" : "hoffice-hwpviewer",
+              "version" : "",
+              "name" : "한글",
+              "image-file" : "",
+              "image-resource" : "/kr/hancom/hancom-toolkit/viewer.svg",
+              "url" : "https://cdn.hancom.com/pds/hnc/VIE",
+              "referer" : "https://www.hancom.com/cs_center",
+              "file-name" : "hoffice-hwpviewer_amd64.deb",
+              "MD5" : "f46b30ff6e42681c445b5624c49a3d2e",
+              "SHA256" : "99d5eec08be5911f9c7334eecade5c14714e5d1e471de8cdaf11560ccc1e8b8e"
+	    },
+	    {
+            "package" : "hoffice",
+            "version" : "",
+			"name" : "오피스 뷰어",
+			"image-file" : "",
+            "image-resource" : "/kr/hancom/hancom-toolkit/office.svg",
+		    "url" : "http://ftp.br.debian.org/debian/pool/main/e/eog",
+			"referer" : "",
+	    	"file-name" : "eog_3.28.4-2+b1_amd64.deb",
+	    	"MD5" : "",
+	    	"SHA256" : ""
+	    },
+	    {
+            "package" : "v3-test",
+            "version" : "",
+			"name" : "V3",
+			"image-file" : "",
+            "image-resource" : "/kr/hancom/hancom-toolkit/v3.jpg",
+		    "url" : "",
+			"referer" : "",
+	    	"file-name" : "hoffice-hwpviewer_amd64.deb",
+	    	"MD5" : "f46b30ff6e42681c445b5624c49a3d2e",
+	    	"SHA256" : "99d5eec08be5911f9c7334eecade5c14714e5d1e471de8cdaf11560ccc1e8b8e"
+	    }
+	]
+
+}
