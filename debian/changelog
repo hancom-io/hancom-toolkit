@@ -1,3 +1,10 @@
+hancom-toolkit (0.2.1+han2u1) unstable; urgency=medium
+
+  [ donghun ]
+  * [e227aff6] Added update function
+
+ -- Gooroom Autobuilder <jenkins@gooroom.kr>  Wed, 07 Oct 2020 14:14:54 +0900
+
 hancom-toolkit (0.1.1+han2u1) unstable; urgency=medium
 
   * Initial release.
