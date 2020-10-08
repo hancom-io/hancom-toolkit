@@ -2,7 +2,7 @@
     "packages" :[
        {
            "package" : "hoffice-hwp",
-           "version" : "",
+           "version" : "11.20.0.989",
            "name" : {
              "ko" : "한글 2020 Beta",
              "en" : "Hangul 2020 Beta"
@@ -11,13 +11,13 @@
            "image-resource" : "/kr/hancom/hancom-toolkit/hwp.svg",
            "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
            "referer" : "https://www.hancom.com/cs_center",
-           "file-name" : "hoffice_hwp_amd64.deb",
-           "MD5" : "b7a35c7ea80436b0fcd36144d4aa9fc8",
-           "SHA256" : "1eddaa52eb15ccef4a6164ee52880e3d490bdad2d84f26a0b0bf627ab0ffb995"
+           "file-name" : "hoffice_hwp_2020_amd64.deb",
+           "MD5" : "4e460ba85ad0622bc8c1841172953991",
+           "SHA256" : "dc234b4d8813c39ee4686f09195b160e998fecd8798c91d7dd0548723fb999ae"
         },
         {
            "package" : "hoffice-viewer",
-           "version" : "11.20.0.905",
+           "version" : "11.20.0.991",
            "check-package" : "hoffice-hwpviewer",
            "name" : {
                "ko" : "한컴오피스 2020 Viewer Beta\n(한글/한셀/한쇼)",
@@ -30,9 +30,9 @@
            "image-resource" : "/kr/hancom/hancom-toolkit/office.svg",
            "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
            "referer" : "https://www.hancom.com/cs_center",
-           "file-name" : "hoffice_viewer_amd64.deb",
-           "MD5" : "0cf826d146711316b67ca151934c8b9b",
-           "SHA256" : "479a075981f7de7a27e90517e50c51f07dbd5c48b70571a6db5f9e70a5cd8ece"
+           "file-name" : "hoffice_viewer_2020_amd64.deb",
+           "MD5" : "425fdf3304e9cb59da8f97952e7acec6",
+           "SHA256" : "db25bfbbe3661625ef3640f619db106f7be9745808277f8a0614f859270dacdd"
         }
     ]
 }
