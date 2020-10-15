@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=0.1
+Name=Hancom Toolkit
+Comment=Hancom Toolkit
+Icon=hancom-toolkit
+Encoding=UTF-8
+Exec=hancom-toolkit
+Terminal=false
+Type=Application
+Categories=Utility;
+NoDisplay=true;
+StartupNotify=true

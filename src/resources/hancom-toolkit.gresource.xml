@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/kr/hancom/hancom-toolkit">
+    <file>hancom-toolkit-window.ui</file>
+    <file>hancom-toolkit-view-row.ui</file>
+    <file>hancom-toolkit.svg</file>
+    <file>hancom-toolkit.json</file>
+    <file>style.css</file>
+    <file>v3.jpg</file>
+    <file>office.svg</file>
+    <file>hwp.svg</file>
+  </gresource>
+</gresources>

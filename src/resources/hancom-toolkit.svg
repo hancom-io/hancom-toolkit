@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="750" height="320" viewBox="0 0 750 320">
+    <defs>
+        <path id="prefix__a" d="M0 0H750V320H0z"/>
+        <path id="prefix__b" d="M0 0H750V320H0z"/>
+        <path id="prefix__e" d="M584 -43L911 145.093 911 343 584 343z"/>
+        <path id="prefix__g" d="M546 -53L960 185.284 960 436 546 436z"/>
+        <linearGradient id="prefix__h" x1="44.002%" x2="0%" y1="27.924%" y2="27.924%">
+            <stop offset="0%" stop-color="#52E8D3"/>
+            <stop offset="100%" stop-color="#29CBA7"/>
+        </linearGradient>
+        <linearGradient id="prefix__i" x1="0%" x2="52.529%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#212B3B"/>
+            <stop offset="100%" stop-color="#1D2534"/>
+        </linearGradient>
+        <filter id="prefix__d" width="116.2%" height="113.7%" x="-7.5%" y="-6.3%" filterUnits="objectBoundingBox">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="8.5"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+        </filter>
+        <filter id="prefix__f" width="112.8%" height="110.8%" x="-5.9%" y="-5%" filterUnits="objectBoundingBox">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="8.5"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <use fill="#212B3B" xlink:href="#prefix__a"/>
+        <mask id="prefix__c" fill="#fff">
+            <use xlink:href="#prefix__b"/>
+        </mask>
+        <g mask="url(#prefix__c)">
+            <use fill="#000" filter="url(#prefix__d)" xlink:href="#prefix__e"/>
+            <use fill="#822AB0" xlink:href="#prefix__e"/>
+        </g>
+        <g mask="url(#prefix__c)">
+            <use fill="#000" filter="url(#prefix__f)" xlink:href="#prefix__g"/>
+            <use fill="url(#prefix__h)" xlink:href="#prefix__g"/>
+        </g>
+        <path fill="#37749B" d="M656.976 47.786L1033 264v172H633V61.656c0-8.836 7.163-16 16-16 2.799 0 5.55.735 7.976 2.13z" mask="url(#prefix__c)"/>
+        <path fill="#FFF" d="M621.82 151.99h304.085c12.25 0 22.181 9.931 22.181 22.181 0 4.597-1.428 9.08-4.086 12.829-15.569 21.96-40.817 35.01-67.736 35.01H572.18l49.642-70.02z" mask="url(#prefix__c)" transform="rotate(30 770.5 187)"/>
+        <path fill="#37749B" d="M543.976 97.786L920 314v242H520V111.656c0-8.836 7.163-16 16-16 2.799 0 5.55.735 7.976 2.13z" mask="url(#prefix__c)"/>
+        <path fill="#1D2534" d="M519 117L933 355.284 933 606 519 606z" mask="url(#prefix__c)"/>
+        <path fill="url(#prefix__i)" d="M0 117H520V496H0z" mask="url(#prefix__c)"/>
+        <path fill="#F5A623" d="M447.975 144.683H876.975V148.683H447.975z" mask="url(#prefix__c)" transform="rotate(30 662.475 146.683)"/>
+        <path fill="#50E3C2" fill-rule="nonzero" d="M460 41c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12zm0-3.429c4.734 0 8.571-3.837 8.571-8.571s-3.837-8.571-8.571-8.571-8.571 3.837-8.571 8.571 3.837 8.571 8.571 8.571z" mask="url(#prefix__c)"/>
+        <path fill="#F8E71C" fill-rule="nonzero" d="M432 157c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6zm0-1.714c2.367 0 4.286-1.92 4.286-4.286 0-2.367-1.92-4.286-4.286-4.286-2.367 0-4.286 1.92-4.286 4.286 0 2.367 1.92 4.286 4.286 4.286z" mask="url(#prefix__c)"/>
+        <path fill="#9013FE" d="M50.389-4.917v3.464L-44 53.043l-1.5-2.598L50.389-4.917zm0-8.083v3.464L-47.5 46.981l-1.5-2.598L50.389-13z" mask="url(#prefix__c)" transform="matrix(1 0 0 -1 0 40.043)"/>
+        <g transform="translate(50 98)">
+            <text fill="#FFF" font-family="NotoSansCJKkr-Medium, Noto Sans CJK KR" font-size="32" font-weight="400">
+                <tspan x="68.412" y="38">한글 2020 Viewer</tspan>
+            </text>
+            <g fill-rule="nonzero">
+                <path fill="#CCC" d="M15.328 0H48v32.672C48 41.138 41.138 48 32.672 48H0V15.328C0 6.862 6.862 0 15.328 0z"/>
+                <path fill="#202020" d="M6.271 46.388c.412-1.253.828-2.454 1.24-3.717h-.586c-.33 1.03-.649 2.013-.958 3.054-.31-1.04-.625-2.023-.954-3.054h-.586c.407 1.263.823 2.464 1.235 3.717h.61zm2.145.005v-3.722h-.562v3.722h.562zm3.02 0v-.474H9.65v-1.317h1.665v-.47H9.65v-.992h1.786v-.47H9.093v3.723h2.343zm1.757-.005c.199-.871.402-1.694.6-2.57.04-.17.058-.324.102-.484.218 1.04.46 2.023.697 3.054h.605c.315-1.253.624-2.454.94-3.717h-.572c-.228 1.03-.45 2.009-.658 3.04l-.697-3.04h-.63c-.237 1.03-.484 2.004-.692 3.035-.208-1.031-.435-2.004-.663-3.035h-.576c.315 1.263.624 2.464.94 3.717h.604zm5.78.005v-.474h-1.787v-1.317h1.665v-.47h-1.665v-.992h1.787v-.47H16.63v3.723h2.343zm1.103 0v-1.462h.562l.735 1.462h.697l-.92-1.559v-.01c.446-.154.756-.469.756-1.069 0-.639-.47-1.084-1.322-1.084h-1.07v3.722h.562zm.44-1.907h-.445v-1.35h.576c.387 0 .688.203.688.634 0 .556-.267.716-.818.716z"/>
+                <path fill="#148FD0" d="M15.328 0H48v24c0 9.58-7.765 17.345-17.345 17.345H0V15.328C0 6.862 6.862 0 15.328 0z"/>
+                <path fill="#FFF" d="M18.151 27.429v3.832h14.723v2.823H15.328V27.43h2.823zm5.698-1.261c1.11 0 2.01.897 2.01 2.004s-.9 2.005-2.01 2.005c-1.11 0-2.01-.898-2.01-2.005 0-1.107.9-2.004 2.01-2.004zm-.13-11.691c3.055 0 5.531 2.475 5.531 5.527 0 3.053-2.476 5.527-5.53 5.527-3.055 0-5.53-2.474-5.53-5.527 0-3.052 2.475-5.527 5.53-5.527zm.004 2.767c-1.525 0-2.76 1.239-2.76 2.766 0 1.529 1.235 2.767 2.76 2.767 1.524 0 2.76-1.238 2.76-2.767 0-1.527-1.236-2.766-2.76-2.766zm1.689-9.177v3.025h6.857l.013 2.824h-16.35v-2.824h6.656V8.067h2.824z"/>
+            </g>
+            <rect width="43" height="20" x="329" y="18" fill="#4A90E2" rx="10"/>
+            <text fill="#FFF" font-family="NotoSansCJKkr-Medium, Noto Sans CJK KR" font-size="12" font-weight="400">
+                <tspan x="337.282" y="32">Beta</tspan>
+            </text>
+        </g>
+        <path fill="#B8E986" fill-rule="nonzero" d="M51 107c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm0-2.286c3.156 0 5.714-2.558 5.714-5.714 0-3.156-2.558-5.714-5.714-5.714-3.156 0-5.714 2.558-5.714 5.714 0 3.156 2.558 5.714 5.714 5.714z"/>
+        <text fill="#FFF" font-family="NotoSansCJKkr-Light, Noto Sans CJK KR" font-size="16" font-weight="300">
+            <tspan x="50" y="185">한컴구름에서 한글 문서를 볼 수 있습니다. </tspan> <tspan x="50" y="210">앞으로 다양한 기능 추가 및 안정적인 기술지원으로 편리한 문서 뷰어를 제공할 예정입니다. </tspan>
+        </text>
+    </g>
+</svg>

@@ -1,0 +1,9 @@
+data/kr.gooroom.viewer-installer.desktop.in
+data/kr.gooroom.viewer-installer.appdata.xml.in
+data/kr.gooroom.viewer-installer.gschema.xml
+src/viewer-installer-window.ui
+src/main.c
+src/viewer-installer-application.c
+src/viewer-installer-window-view-model.c
+src/viewer-installer-window.c
+

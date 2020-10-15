@@ -1,0 +1,20 @@
+Source: hancom-toolkit
+Section: gnome
+Priority: optional
+Maintainer: Hancom Gooroom Maintainers <gooroom@hancom.com>
+Build-Depends: appstream-util,
+			   debhelper (>= 10),
+			   desktop-file-utils,
+               gnome-pkg-tools (>= 0.17),
+			   meson (>= 0.43.0),
+               libglib2.0-dev (>= 2.44.0),
+               libgtk-3-dev (>= 3.20.0),
+               libjson-glib-dev (>= 1.2.0),
+			   libcurl4-openssl-dev
+Standards-Version: 3.9.6
+
+Package:hancom-toolkit
+Architecture: any
+Depends: libglu1-mesa,
+		 ${shlibs:Depends}, ${misc:Depends}
+Description: Hancom installation toolkit

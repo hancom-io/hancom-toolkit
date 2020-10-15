@@ -1,0 +1,55 @@
+# English(USA) translations for hancom-toolkit package.
+# Copyright (C) 2020 THE hancom-toolkit'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the hancom-toolkit package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hancom-toolkit 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-23 12:52+0900\n"
+"PO-Revision-Date: 2020-06-23 12:54+0900\n"
+"Language-Team: Korean\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Install"
+msgstr "Install"
+
+msgid "Install Later"
+msgstr "Install Later"
+
+msgid "Waiting"
+msgstr "Waiting"
+
+msgid "Downloading"
+msgstr "Downloading"
+
+msgid "Downloaded"
+msgstr "Downloaded"
+
+msgid "Installing"
+msgstr "Installing"
+
+msgid "Installed"
+msgstr "Installed"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Update version"
+msgstr "Update version"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Installation of Application is failed"
+msgstr "Installation of Application is failed"
+
+msgid "Network is not active"
+msgstr "Network is not active"
+
+msgid "File is not valid"
+msgstr "File is not valid"
