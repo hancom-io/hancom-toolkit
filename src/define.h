@@ -14,3 +14,8 @@ typedef enum
 
 #define HTOOLKIT_CHECK "htoolkit-check"
 #define HTOOLKIT_SCRIPT "htoolkit-install"
+#define OUT_PATH "/var/tmp/htoolkit"
+#define HTOOLKIT_PATH1 "/etc/lsb-release"
+#define HTOOLKIT_PATH2 "/etc/gooroom/info"
+#define HTOOLKIT1 "Gooroom"
+#define HTOOLKIT2 "Hancom"

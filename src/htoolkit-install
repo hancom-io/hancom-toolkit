@@ -14,9 +14,7 @@ do
 done
 
 if [ "$1" -eq 0 ]; then
-    echo "apt purge $CMD-y"
     apt purge $CMD -y
 else
-    echo "apt install $CMD-y"
     apt install --reinstall $CMD -y
 fi

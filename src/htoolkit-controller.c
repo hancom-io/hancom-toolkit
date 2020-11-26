@@ -28,9 +28,7 @@
 #include "htoolkit-app.h"
 #include "htoolkit-controller.h"
 
-#define OUT_PATH "/var/tmp"
-
-typedef struct 
+typedef struct
 {
     guint      download_work_id;
     gboolean   download_working;
@@ -156,7 +154,7 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
     dir = g_path_get_dirname (file);
 
     unlink (file);
-    g_rmdir (dir);
+    remove_directory (dir);
     g_free (dir);
     g_free (file);
     g_strfreev (args);
@@ -350,7 +348,7 @@ htoolkit_controller_download_func (HToolkitApp *app)
         g_autofree gchar *dir;
         dir = g_path_get_dirname (out_file);
         unlink (out_file);
-        g_rmdir (dir);
+        remove_directory (dir);
 
         gint state;
         state = htoolkit_app_get_state (app);
@@ -420,7 +418,7 @@ htoolkit_controller_download (HToolkitApp *app)
         htoolkit_app_set_error_msg (app, error);
         g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
         unlink (out_file);
-        g_rmdir (dir);
+        remove_directory (dir);
         return;
     }
 

@@ -23,4 +23,5 @@ gboolean check_package (const gchar *package);
 gboolean check_version (const gchar *package, const gchar *version);
 gboolean check_version_from_filename (const gchar *package, const gchar *filename);
 
+void remove_directory (gchar *path);
 #endif

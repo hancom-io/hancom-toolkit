@@ -18,13 +18,16 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
+#include <gio/gio.h>
+#include <glib-unix.h>
 
+#include "define.h"
+#include "utils.h"
 #include "hancom-toolkit-config.h"
 #include "htoolkit-window.h"
 #include "htoolkit-application.h"
 
 #define DEFAULT_WINDOW_WIDTH 340
-//#define DEFAULT_WINDOW_WIDTH 355
 #define DEFAULT_WINDOW_HEIGHT -1
 
 struct _HToolkitApplicationPrivate
@@ -34,6 +37,16 @@ struct _HToolkitApplicationPrivate
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (HToolkitApplication, htoolkit_application, GTK_TYPE_APPLICATION)
+
+static gboolean
+htoolkit_application_signal_quit (gpointer data)
+{
+    remove_directory (OUT_PATH);
+
+    g_application_quit (G_APPLICATION (data));
+
+    return FALSE;
+}
 
 static void
 htoolkit_application_window_move (gpointer data)
@@ -77,6 +90,8 @@ htoolkit_application_activate (GApplication *app)
     HToolkitApplicationPrivate *priv;
     priv = htoolkit_application_get_instance_private (HTOOLKIT_APPLICATION(app));
 
+    remove_directory (OUT_PATH);
+
     /* Get the current window or create one if necessary. */
     priv->window = gtk_application_get_active_window (GTK_APPLICATION(app));
     if (priv->window == NULL)
@@ -111,6 +126,10 @@ htoolkit_application_activate (GApplication *app)
                       app);
     g_signal_connect (gtk_window_get_screen (GTK_WINDOW (priv->window)), "size-changed",
                       G_CALLBACK (htoolkit_application_screen_size_changed), app);
+
+    g_unix_signal_add (SIGINT, htoolkit_application_signal_quit, app);
+    g_unix_signal_add (SIGHUP, htoolkit_application_signal_quit, app);
+    g_unix_signal_add (SIGTERM,htoolkit_application_signal_quit, app);
 }
 
 static void
