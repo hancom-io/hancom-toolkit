@@ -138,8 +138,8 @@ htoolkit_window_app_load (HToolkitWindow *win)
             if (json_node == NULL)
                 continue;
 
-            gchar* package;
-            gchar* version;
+            gchar* package = NULL;
+            gchar* version = NULL;
             HToolkitApp *app;
             gboolean is_update;
 
@@ -153,8 +153,8 @@ htoolkit_window_app_load (HToolkitWindow *win)
                 version = g_strdup (json_node_get_string (json_node));
             }
 
-            gchar* check;
-            json_node = json_object_get_member (json_item, "check-package");
+            gchar* check = NULL;
+            json_node = json_object_get_member (json_item, "update-package");
             if (json_node != NULL)
             {
                 check = g_strdup (json_node_get_string (json_node));
@@ -174,6 +174,13 @@ htoolkit_window_app_load (HToolkitWindow *win)
                 is_update = TRUE;
             }
 
+            gchar* remove = NULL;
+            json_node = json_object_get_member (json_item, "remove-package");
+            if (json_node != NULL)
+            {
+                remove = g_strdup (json_node_get_string (json_node));
+            }
+
             shutdown = FALSE;
             app = htoolkit_app_new (package);
             if (is_update)
@@ -187,11 +194,17 @@ htoolkit_window_app_load (HToolkitWindow *win)
 
                 if (check)
                 {
-                    htoolkit_app_set_check_package (app, check);
+                    htoolkit_app_set_update_package (app, check);
                     g_free (check);
                 }
             }
             g_free (package);
+
+            if (remove && strlen (remove)!= 0)
+            {
+                htoolkit_app_set_remove_package (app, remove);
+                g_free (remove);
+            }
 
             if (json_object_has_member (json_item, "name"))
             {

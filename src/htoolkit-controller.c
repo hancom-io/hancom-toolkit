@@ -87,7 +87,7 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
         g_autoptr(GString) str = g_string_new (NULL);
 
         tmp = NULL;
-        check = htoolkit_app_get_check_package (app);
+        check = htoolkit_app_get_update_package (app);
         if (check)
         {
             if (check_package(check))
@@ -106,6 +106,25 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
         }
 
         delete_command = g_strdup_printf ("pkexec %s/%s/%s 0 %s", LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_SCRIPT, packages);
+
+        args = g_strsplit (delete_command, " ", -1);
+
+        if (!g_spawn_sync (NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL, NULL, &error))
+        {
+            htoolkit_app_set_error_msg (app, error->message);
+            g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
+
+            g_error_free (error);
+        }
+        error = NULL;
+    }
+
+    g_autofree gchar *remove_package;
+    remove_package = htoolkit_app_get_remove_package (app);
+    if (remove_package)
+    {
+        g_autofree gchar *delete_command;
+        delete_command = g_strdup_printf ("pkexec %s/%s/%s 0 %s", LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_SCRIPT, remove_package);
 
         args = g_strsplit (delete_command, " ", -1);
 

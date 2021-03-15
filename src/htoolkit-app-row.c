@@ -162,8 +162,10 @@ htoolkit_app_row_refresh_state_idle (gpointer user_data)
       }
     case STATE_INSTALLED :
       {
+        #if 0
         gtk_label_set_text (GTK_LABEL (priv->status_label), _("Installed"));
         gtk_widget_show (priv->status_label);
+        #endif
         break;
       }
     case STATE_ERROR:

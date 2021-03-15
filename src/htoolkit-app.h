@@ -39,7 +39,8 @@ void                htoolkit_app_set_error_msg (HToolkitApp *app, const gchar* e
 void                htoolkit_app_set_download_path (HToolkitApp *app, const gchar* path);
 
 void                htoolkit_app_set_package        (HToolkitApp *app, const gchar* package);
-void                htoolkit_app_set_check_package  (HToolkitApp *app, const gchar* package);
+void                htoolkit_app_set_update_package  (HToolkitApp *app, const gchar* package);
+void                htoolkit_app_set_remove_package  (HToolkitApp *app, const gchar* package);
 void                htoolkit_app_set_version   (HToolkitApp *app, const gchar* version);
 void                htoolkit_app_set_name      (HToolkitApp *app, const gchar* name);
 void                htoolkit_app_set_image_from_file     (HToolkitApp *app, const gchar* image);
@@ -66,7 +67,8 @@ gchar*              htoolkit_app_get_error_msg (HToolkitApp *app);
 gchar*              htoolkit_app_get_download_path (HToolkitApp *app);
 
 gchar*              htoolkit_app_get_package       (HToolkitApp *app);
-gchar*              htoolkit_app_get_check_package (HToolkitApp *app);
+gchar*              htoolkit_app_get_update_package (HToolkitApp *app);
+gchar*              htoolkit_app_get_remove_package (HToolkitApp *app);
 gchar*              htoolkit_app_get_version   (HToolkitApp *app);
 gchar*              htoolkit_app_get_name      (HToolkitApp *app);
 gchar*              htoolkit_app_get_image_from_file         (HToolkitApp *app);
