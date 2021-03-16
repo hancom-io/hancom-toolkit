@@ -7,7 +7,8 @@
     <file>hancom-toolkit.json</file>
     <file>style.css</file>
     <file>v3.jpg</file>
-    <file>office.svg</file>
+    <file>hancomoffice.svg</file>
+    <file>hancomoffice-viewer.svg</file>
     <file>hwp.svg</file>
   </gresource>
 </gresources>

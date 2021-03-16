@@ -1,24 +1,8 @@
 {
     "packages" :[
-       {
-           "package" : "hoffice-hwp",
-           "version" : "11.20.0.989",
-           "name" : {
-             "ko" : "한글 2020 Beta",
-             "en" : "Hangul 2020 Beta"
-           },
-           "image-file" : "",
-           "image-resource" : "/kr/hancom/hancom-toolkit/hwp.svg",
-           "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
-           "referer" : "https://www.hancom.com/cs_center",
-           "file-name" : "hoffice_hwp_2020_amd64.deb",
-           "MD5" : "4e460ba85ad0622bc8c1841172953991",
-           "SHA256" : "dc234b4d8813c39ee4686f09195b160e998fecd8798c91d7dd0548723fb999ae"
-        },
         {
            "package" : "hoffice-viewer",
            "version" : "11.20.0.991",
-           "check-package" : "hoffice-hwpviewer",
            "name" : {
                "ko" : "한컴오피스 2020 Viewer Beta\n(한글/한셀/한쇼)",
                "en" : "HancomOffice 2020 \nViewer Beta"
@@ -27,12 +11,41 @@
                "ko" : "일부 글꼴 미설치로 호환성이 떨어질 수 있습니다",
                "en" : "Compatibility may be reduced due to the lack of some fonts installed"
            },
-           "image-resource" : "/kr/hancom/hancom-toolkit/office.svg",
+           "image-resource" : "/kr/hancom/hancom-toolkit/hancomoffice-viewer.svg",
            "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
            "referer" : "https://www.hancom.com/cs_center",
            "file-name" : "hoffice_viewer_2020_amd64.deb",
            "MD5" : "425fdf3304e9cb59da8f97952e7acec6",
            "SHA256" : "db25bfbbe3661625ef3640f619db106f7be9745808277f8a0614f859270dacdd"
+        },
+        {
+           "package" : "hoffice",
+           "version" : "11.20.0.1496",
+           "remove-package" : "hoffice-hwp",
+           "name" : {
+               "ko" : "한컴오피스 2022 Beta\n(한글/한워드/한셀/한쇼)",
+               "en" : "HancomOffice 2022 Beta"
+           },
+           "image-resource" : "/kr/hancom/hancom-toolkit/hancomoffice.svg",
+           "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
+           "referer" : "https://www.hancom.com/cs_center",
+           "file-name" : "hoffice_11.20.0.1496_amd64.deb",
+           "MD5" : "f17e31547902f1c4338bf374fd4461f6",
+           "SHA256" : "d92bc5d1782fe9a7e545bd5ec9563c0463f5bf7132d31bdee973650ea46d7dad"
+        },
+        {
+           "package" : "ahnlab-v3lite",
+           "version" : "1.0.9.3",
+           "name" : {
+               "ko" : "안랩 V3 Lite",
+               "en" : "Ahnlab V3 Lite"
+           },
+           "image-resource" : "/kr/hancom/hancom-toolkit/v3.jpg",
+           "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
+           "referer" : "https://www.hancom.com/cs_center",
+           "file-name" : "v3lite-linux_x86_64_1.0.9.3_88.deb",
+           "MD5" : "1977b85d2a585312f51fa7d0784a8597",
+           "SHA256" : "4ddc078529195c06a93204da5e3e81649969e6070635b2613ce7abc446f8b766"
         }
     ]
 }
