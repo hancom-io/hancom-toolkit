@@ -32,6 +32,7 @@ typedef struct
     gboolean quit;
     gboolean network_connected;
     HToolkitController *ctrl;
+    HToolkitAppRow *installed_app;
 } HToolkitAppListPrivate;
 
 enum {
@@ -86,20 +87,60 @@ htoolkit_controller_network_changed (GNetworkMonitor *monitor,
     }
 }
 
+static gboolean
+htoolkit_app_list_row_state_installed_cb (gpointer user_data)
+{
+    gint length;
+    GList *list;
+    HToolkitAppList *app_list;
+    HToolkitAppListPrivate *priv;
+    app_list = HTOOLKIT_APP_LIST (user_data);
+    priv = htoolkit_app_list_get_instance_private (app_list);
+
+    gtk_widget_hide (GTK_WIDGET(priv->installed_app));
+    gtk_container_remove (GTK_CONTAINER (app_list), GTK_WIDGET(priv->installed_app));
+
+    priv->installed_app = NULL;
+
+    list = gtk_container_get_children (GTK_CONTAINER (app_list));
+    length = g_list_length (list);
+
+    if (length == 0)
+    {
+        g_signal_emit_by_name (app_list, "shutdown");
+    }
+
+    return G_SOURCE_REMOVE;
+}
+
+
 static void
 htoolkit_app_list_row_state_notify_cb (HToolkitAppRow *app_row, GParamSpec *pspec, gpointer user_data)
 {
     gint length;
     guint state;
     GList *list;
+    HToolkitAppList *app_list;
+    HToolkitAppListPrivate *priv;
+
+    app_list = HTOOLKIT_APP_LIST (user_data);
+    priv  = htoolkit_app_list_get_instance_private (app_list);
 
     g_object_get (G_OBJECT (app_row), "state", &state, NULL);
-
-    HToolkitAppList *app_list = HTOOLKIT_APP_LIST (user_data);
 
     switch (state)
     {
     case STATE_INSTALLED:
+        {
+            if (priv->installed_app != NULL) {
+                gtk_container_remove (GTK_CONTAINER (app_list), GTK_WIDGET(priv->installed_app));
+                priv->installed_app = NULL;
+            }
+
+            priv->installed_app = app_row;
+            g_timeout_add (1000, (GSourceFunc)htoolkit_app_list_row_state_installed_cb, app_list);
+						break;
+        }
     case STATE_CLOSE:
         {
             gtk_widget_hide (GTK_WIDGET(app_row));
@@ -178,6 +219,7 @@ htoolkit_app_list_init (HToolkitAppList *list)
     priv->quit = FALSE;
     priv->network_connected = FALSE;
     priv->ctrl  = htoolkit_controller_new ();
+    priv->installed_app = NULL;
 
     GNetworkMonitor *monitor = g_network_monitor_get_default();
     g_signal_connect (monitor, "network-changed", G_CALLBACK (htoolkit_controller_network_changed), list);
