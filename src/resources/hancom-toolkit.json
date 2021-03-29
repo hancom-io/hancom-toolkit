@@ -20,7 +20,7 @@
         },
         {
            "package" : "hoffice",
-           "version" : "11.20.0.1496",
+           "version" : "11.20.0.1520",
            "remove-package" : "hoffice-hwp",
            "name" : {
                "ko" : "한컴오피스 2022 Beta\n(한글/한워드/한셀/한쇼)",
@@ -29,9 +29,9 @@
            "image-resource" : "/kr/hancom/hancom-toolkit/hancomoffice.svg",
            "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
            "referer" : "https://www.hancom.com/cs_center",
-           "file-name" : "hoffice_11.20.0.1496_amd64.deb",
-           "MD5" : "f17e31547902f1c4338bf374fd4461f6",
-           "SHA256" : "d92bc5d1782fe9a7e545bd5ec9563c0463f5bf7132d31bdee973650ea46d7dad"
+           "file-name" : "hoffice_11.20.0.1520_amd64.deb",
+           "MD5" : "abbb954836ed930623394dd533ab899c",
+           "SHA256" : "1ecb2f82e915b49706d1f5f6d206f8bd4a9384fda2bd56798c94046865fe5730"
         },
         {
            "package" : "ahnlab-v3lite",
@@ -40,7 +40,7 @@
                "ko" : "안랩 V3 Lite",
                "en" : "Ahnlab V3 Lite"
            },
-           "image-resource" : "/kr/hancom/hancom-toolkit/v3.jpg",
+           "image-resource" : "/kr/hancom/hancom-toolkit/v-3.svg",
            "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
            "referer" : "https://www.hancom.com/cs_center",
            "file-name" : "v3lite-linux_x86_64_1.0.9.3_88.deb",
