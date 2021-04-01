@@ -1,3 +1,14 @@
+hancom-toolkit (0.2.3+han2u1) unstable; urgency=medium
+
+  [ donghun ]
+  * [5e2e1a78] Modified the file check and directory remove function
+  * [b662b4ec] Added package removal function
+  * [d7ef1c8c] Added HancomOffice 2022 Beta and Ahnlab V3 lite resources
+  * [26854ed8] [Bug:3340]Fixed status error after installation is complete
+  * [c2029a14] Updated HancomOffice 2022 Beta resources
+
+ -- Gooroom Autobuilder <jenkins@gooroom.kr>  Thu, 01 Apr 2021 12:14:06 +0900
+
 hancom-toolkit (0.2.2+han2u1) unstable; urgency=medium
 
   [ donghun ]
