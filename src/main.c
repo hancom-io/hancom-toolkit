@@ -17,9 +17,10 @@
  */
 
 #include <glib/gi18n.h>
+#include <gio/gio.h>
+#include <glib/gstdio.h>
 
 #include "define.h"
-#include "utils.h"
 #include "hancom-toolkit-config.h"
 #include "htoolkit-application.h"
 
@@ -38,11 +39,78 @@ check_live_installer ()
     return res;
 }
 
+static gboolean
+hancom_toolkit_init ()
+{
+    gboolean use_toolkit;
+
+    FILE *fp;
+    gchar line[1024], *lineptr;
+
+    gchar *filename;
+    filename = g_strdup (HTOOLKIT_PATH1);
+
+    use_toolkit = FALSE;
+    if ((fp = g_fopen (filename, "r")) != NULL)
+    {
+        while (fgets (line, sizeof (line), fp) != NULL)
+        {
+            lineptr = line + 11;
+            if (g_str_has_prefix(lineptr, HTOOLKIT1))
+            {
+                use_toolkit = TRUE;
+            }
+            break;
+        }
+        fclose (fp);
+    }
+
+    g_free (filename);
+
+    if (!use_toolkit)
+        return FALSE;
+
+    use_toolkit = FALSE;
+    filename = g_strdup (HTOOLKIT_PATH2);
+    if (!g_file_test (filename, G_FILE_TEST_EXISTS))
+    {
+        g_free (filename);
+        return FALSE;
+    }
+    else
+    {
+        if ((fp = g_fopen (filename, "r")) != NULL)
+        {
+            while (fgets (line, sizeof (line), fp) != NULL)
+            {
+                if (g_str_has_prefix(line, "CODENAME"))
+                {
+                    lineptr = line + 9;
+                    if (g_ascii_strncasecmp (lineptr, HTOOLKIT1, 7) == 0 ||
+                        g_ascii_strncasecmp (lineptr, HTOOLKIT2, 6) == 0)
+                    {
+                        use_toolkit = TRUE;
+                    }
+                    break;
+                }
+            }
+            fclose (fp);
+        }
+    }
+
+    g_free (filename);
+    return use_toolkit;
+}
 int
 main (int   argc,
       char *argv[])
 {
     if (check_live_installer ())
+    {
+        return 0;
+    }
+
+    if (!hancom_toolkit_init())
     {
         return 0;
     }

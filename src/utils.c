@@ -17,6 +17,8 @@
  */
 
 #include <glib.h>
+#include <gio/gio.h>
+#include <glib/gstdio.h>
 
 #include "define.h"
 #include "hancom-toolkit-config.h"
@@ -129,3 +131,46 @@ out:
     return res;
 }
 
+static void
+empty_directory (GFile *file)
+{
+    g_autoptr(GFileEnumerator) enumerator = NULL;
+    g_autoptr (GFile) child = NULL;
+
+    enumerator = g_file_enumerate_children (file,
+                                            G_FILE_ATTRIBUTE_STANDARD_NAME,
+                                            G_FILE_QUERY_INFO_NONE,
+                                            NULL,
+                                            NULL);
+
+    g_file_enumerator_iterate (enumerator, NULL, &child, NULL, NULL);
+    while (child != NULL)
+    {
+        gboolean res;
+        res = g_file_delete (child, NULL, NULL);
+        if (!res)
+        {
+            empty_directory (child);
+            g_file_delete (child, NULL, NULL);
+        }
+        g_file_enumerator_iterate (enumerator, NULL, &child, NULL, NULL);
+    }
+}
+
+void
+remove_directory (gchar *path)
+{
+    if (!g_file_test (path, G_FILE_TEST_EXISTS))
+        return;
+
+    gint ret;
+    ret = g_rmdir (path);
+
+    if (ret != 0)
+    {
+        GFile *file = g_file_new_for_path (path);
+        empty_directory (file);
+        g_rmdir (path);
+        g_object_unref (file);
+    }
+}

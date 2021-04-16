@@ -30,7 +30,8 @@ typedef struct
     gchar        *error;
 
     gchar        *package;
-    gchar        *check_package;
+    gchar        *update_package;
+    gchar        *remove_package;
     gchar        *version;
     gchar        *app_name;
     gchar        *app_image_resource;
@@ -58,7 +59,8 @@ typedef struct
 
 enum {
     PROP_PACKAGE = 1,
-    PROP_CHECK_PACKAGE,
+    PROP_UPDATE_PACKAGE,
+    PROP_REMOVE_PACKAGE,
     PROP_VERSION,
     PROP_NAME,
     PROP_IMAGE_FILE,
@@ -105,12 +107,21 @@ htoolkit_app_set_package (HToolkitApp *app, const gchar* package)
 }
 
 void
-htoolkit_app_set_check_package (HToolkitApp *app, const gchar* package)
+htoolkit_app_set_update_package (HToolkitApp *app, const gchar* package)
 {
     HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
     g_return_if_fail (HTOOLKIT_IS_APP (app));
 
-    priv->check_package = g_strdup (package);
+    priv->update_package = g_strdup (package);
+}
+
+void
+htoolkit_app_set_remove_package (HToolkitApp *app, const gchar* package)
+{
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+    g_return_if_fail (HTOOLKIT_IS_APP (app));
+
+    priv->remove_package = g_strdup (package);
 }
 
 void
@@ -283,12 +294,21 @@ htoolkit_app_get_package (HToolkitApp *app)
 }
 
 gchar*
-htoolkit_app_get_check_package (HToolkitApp *app)
+htoolkit_app_get_update_package (HToolkitApp *app)
 {
     g_return_val_if_fail (HTOOLKIT_IS_APP (app), NULL);
     HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
 
-    return g_strdup (priv->check_package);
+    return g_strdup (priv->update_package);
+}
+
+gchar*
+htoolkit_app_get_remove_package (HToolkitApp *app)
+{
+    g_return_val_if_fail (HTOOLKIT_IS_APP (app), NULL);
+    HToolkitAppPrivate *priv = htoolkit_app_get_instance_private (app);
+
+    return g_strdup (priv->remove_package);
 }
 
 gchar*
@@ -446,8 +466,11 @@ htoolkit_app_get_property (GObject *object, guint prop_id, GValue *value, GParam
     case PROP_PACKAGE:
         g_value_set_string (value, priv->package);
         break;
-    case PROP_CHECK_PACKAGE:
-        g_value_set_string (value, priv->check_package);
+    case PROP_UPDATE_PACKAGE:
+        g_value_set_string (value, priv->update_package);
+        break;
+    case PROP_REMOVE_PACKAGE:
+        g_value_set_string (value, priv->remove_package);
         break;
     case PROP_VERSION:
         g_value_set_string (value, priv->version);
@@ -505,8 +528,11 @@ htoolkit_app_set_property (GObject *object, guint prop_id, const GValue *value, 
     case PROP_PACKAGE:
         priv->package = g_strdup (g_value_get_string (value));
         break;
-    case PROP_CHECK_PACKAGE:
-        priv->check_package = g_strdup (g_value_get_string (value));
+    case PROP_UPDATE_PACKAGE:
+        priv->update_package = g_strdup (g_value_get_string (value));
+        break;
+    case PROP_REMOVE_PACKAGE:
+        priv->remove_package = g_strdup (g_value_get_string (value));
         break;
     case PROP_VERSION:
         priv->version = g_strdup (g_value_get_string (value));
@@ -568,7 +594,8 @@ htoolkit_app_finalize (GObject *object)
     g_free (priv->error);
 
     g_free (priv->package);
-    g_free (priv->check_package);
+    g_free (priv->update_package);
+    g_free (priv->remove_package);
     g_free (priv->app_name);
     g_free (priv->app_image_file);
     g_free (priv->app_image_resource);
@@ -611,10 +638,15 @@ htoolkit_app_class_init (HToolkitAppClass *klass)
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
     g_object_class_install_property (object_class, PROP_PACKAGE, pspec);
 
-    pspec = g_param_spec_string ("check_package", NULL, NULL,
+    pspec = g_param_spec_string ("update_package", NULL, NULL,
                      NULL,
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-    g_object_class_install_property (object_class, PROP_CHECK_PACKAGE, pspec);
+    g_object_class_install_property (object_class, PROP_UPDATE_PACKAGE, pspec);
+
+    pspec = g_param_spec_string ("remove_package", NULL, NULL,
+                     NULL,
+                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+    g_object_class_install_property (object_class, PROP_REMOVE_PACKAGE, pspec);
 
     pspec = g_param_spec_string ("version", NULL, NULL,
                      NULL,
@@ -687,7 +719,6 @@ htoolkit_app_class_init (HToolkitAppClass *klass)
                      FALSE,
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
     g_object_class_install_property (object_class, PROP_UPDATE, pspec);
-
 }
 
 static void
@@ -698,7 +729,8 @@ htoolkit_app_init (HToolkitApp *app)
     priv->error = NULL;
 
     priv->package = NULL;
-    priv->check_package = NULL;
+    priv->update_package = NULL;
+    priv->remove_package = NULL;
     priv->version = NULL;
     priv->app_name = NULL;
     priv->app_image_file = NULL;

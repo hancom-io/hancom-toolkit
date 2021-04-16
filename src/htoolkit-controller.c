@@ -28,9 +28,7 @@
 #include "htoolkit-app.h"
 #include "htoolkit-controller.h"
 
-#define OUT_PATH "/var/tmp"
-
-typedef struct 
+typedef struct
 {
     guint      download_work_id;
     gboolean   download_working;
@@ -89,7 +87,7 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
         g_autoptr(GString) str = g_string_new (NULL);
 
         tmp = NULL;
-        check = htoolkit_app_get_check_package (app);
+        check = htoolkit_app_get_update_package (app);
         if (check)
         {
             if (check_package(check))
@@ -108,6 +106,25 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
         }
 
         delete_command = g_strdup_printf ("pkexec %s/%s/%s 0 %s", LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_SCRIPT, packages);
+
+        args = g_strsplit (delete_command, " ", -1);
+
+        if (!g_spawn_sync (NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL, NULL, &error))
+        {
+            htoolkit_app_set_error_msg (app, error->message);
+            g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
+
+            g_error_free (error);
+        }
+        error = NULL;
+    }
+
+    g_autofree gchar *remove_package;
+    remove_package = htoolkit_app_get_remove_package (app);
+    if (remove_package)
+    {
+        g_autofree gchar *delete_command;
+        delete_command = g_strdup_printf ("pkexec %s/%s/%s 0 %s", LIBDIR, GETTEXT_PACKAGE, HTOOLKIT_SCRIPT, remove_package);
 
         args = g_strsplit (delete_command, " ", -1);
 
@@ -156,7 +173,7 @@ htoolkit_controller_install (HToolkitApp *app, gchar *file)
     dir = g_path_get_dirname (file);
 
     unlink (file);
-    g_rmdir (dir);
+    remove_directory (dir);
     g_free (dir);
     g_free (file);
     g_strfreev (args);
@@ -350,7 +367,7 @@ htoolkit_controller_download_func (HToolkitApp *app)
         g_autofree gchar *dir;
         dir = g_path_get_dirname (out_file);
         unlink (out_file);
-        g_rmdir (dir);
+        remove_directory (dir);
 
         gint state;
         state = htoolkit_app_get_state (app);
@@ -420,7 +437,7 @@ htoolkit_controller_download (HToolkitApp *app)
         htoolkit_app_set_error_msg (app, error);
         g_object_set (G_OBJECT (app), "state", STATE_ERROR, NULL);
         unlink (out_file);
-        g_rmdir (dir);
+        remove_directory (dir);
         return;
     }
 

@@ -1,2 +1,7 @@
 #!/bin/bash
-dpkg-query -s $1 | grep Version 
+
+VAL=$(apt-cache search $1)
+
+if [ ! -z "$VAL" ] ; then
+    dpkg-query -s $1 2> /dev/null | grep Version
+fi

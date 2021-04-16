@@ -11,6 +11,3 @@ typedef enum
   STATE_ERROR,
   N_STATE
 } InstallState;
-
-#define HTOOLKIT_CHECK "htoolkit-check"
-#define HTOOLKIT_SCRIPT "htoolkit-install"
