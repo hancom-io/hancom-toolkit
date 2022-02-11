@@ -52,6 +52,8 @@ static void
 htoolkit_application_window_move (gpointer data)
 {
     HToolkitApplicationPrivate *priv;
+    GdkRectangle geometry;
+    GdkMonitor *monitor;
     priv = htoolkit_application_get_instance_private (HTOOLKIT_APPLICATION(data));
 
     GdkScreen *screen = gtk_window_get_screen (GTK_WINDOW (priv->window));
@@ -66,7 +68,9 @@ htoolkit_application_window_move (gpointer data)
         gtk_widget_set_visual (GTK_WIDGET(priv->window), visual);
     }
 
-    int width = gdk_screen_width() - DEFAULT_WINDOW_WIDTH - 10;
+    monitor = gdk_display_get_primary_monitor (gdk_display_get_default());
+    gdk_monitor_get_geometry (monitor, &geometry);
+    int width = geometry.x + geometry.width - DEFAULT_WINDOW_WIDTH - 10;
     gtk_window_move (GTK_WINDOW (priv->window), width, 0);
 
 }
@@ -119,6 +123,7 @@ htoolkit_application_activate (GApplication *app)
     gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
                                                GTK_STYLE_PROVIDER (priv->provider),
                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
+
     g_object_unref (file);
     g_signal_connect (priv->window,
                       "shutdown",
