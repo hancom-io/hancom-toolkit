@@ -2,7 +2,7 @@
     "packages" :[
         {
            "package" : "hoffice-viewer",
-           "version" : "11.20.0.991",
+           "version" : "11.20.0.1741",
            "name" : {
                "ko" : "한컴오피스 2020 Viewer Beta\n(한글/한셀/한쇼)",
                "en" : "HancomOffice 2020 \nViewer Beta"
@@ -15,8 +15,22 @@
            "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
            "referer" : "https://www.hancom.com/cs_center",
            "file-name" : "hoffice_viewer_2020_amd64.deb",
-           "MD5" : "425fdf3304e9cb59da8f97952e7acec6",
-           "SHA256" : "db25bfbbe3661625ef3640f619db106f7be9745808277f8a0614f859270dacdd"
+           "MD5" : "5026a38a037fcd9e5a931058b17b6b98",
+           "SHA256" : "4bcb0e56f7952f050b099534f31abca09b7411dd4e79ecdcb359a7d18a0079b5"
+        },
+        {
+           "package" : "ahnlab-v3lite",
+           "version" : "1.0.9.3",
+           "name" : {
+               "ko" : "안랩 V3 Lite",
+               "en" : "Ahnlab V3 Lite"
+           },
+           "image-resource" : "/kr/hancom/hancom-toolkit/v-3.svg",
+           "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
+           "referer" : "https://www.hancom.com/cs_center",
+           "file-name" : "v3lite-linux_x86_64_1.0.9.3_88.deb",
+           "MD5" : "1977b85d2a585312f51fa7d0784a8597",
+           "SHA256" : "4ddc078529195c06a93204da5e3e81649969e6070635b2613ce7abc446f8b766"
         }
     ]
 }
