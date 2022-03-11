@@ -1,3 +1,14 @@
+hancom-toolkit (0.3.0+han3u1) unstable; urgency=medium
+
+  [ subin.kim ]
+  * [3b73eed2] Hancom Gooroom 3.0 rebase
+
+  [ heejun.jang ]
+  * [133e1b49] Updated hancom toolkit to download hoffice-viewer only
+  * [cffe9cbf] Updated hancom office viewer version and enable to download v3
+
+ -- Gooroom Autobuilder <jenkins@gooroom.kr>  Fri, 11 Mar 2022 21:25:51 +0900
+
 hancom-toolkit (0.2.3+han2u1) unstable; urgency=medium
 
   [ donghun ]
