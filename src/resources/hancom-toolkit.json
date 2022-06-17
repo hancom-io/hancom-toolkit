@@ -20,7 +20,7 @@
         },
         {
            "package" : "ahnlab-v3lite",
-           "version" : "1.0.9.3",
+           "version" : "1.0.11.5",
            "name" : {
                "ko" : "안랩 V3 Lite",
                "en" : "Ahnlab V3 Lite"
@@ -28,9 +28,9 @@
            "image-resource" : "/kr/hancom/hancom-toolkit/v-3.svg",
            "url" : "https://cdn.hancom.com/pds/hnc/DOWN/gooroom",
            "referer" : "https://www.hancom.com/cs_center",
-           "file-name" : "v3lite-linux_x86_64_1.0.9.3_88.deb",
-           "MD5" : "1977b85d2a585312f51fa7d0784a8597",
-           "SHA256" : "4ddc078529195c06a93204da5e3e81649969e6070635b2613ce7abc446f8b766"
+           "file-name" : "v3lite-linux_x86_64_1.0.11.5_114.deb",
+           "MD5" : "ccbfca7d716bfea251c56c817505051f",
+           "SHA256" : "adc0268b4ca0da72da97d686d171a575f368a4ea1bf5f91e87d8b1235efb85ab"
         }
     ]
 }
